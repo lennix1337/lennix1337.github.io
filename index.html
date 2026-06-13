@@ -508,6 +508,27 @@
         pointer-events: none;
       }
 
+      .motion-control {
+        position: fixed;
+        right: 44px;
+        bottom: 54px;
+        z-index: 8;
+        min-height: 34px;
+        padding: 0 12px;
+        border: 1px solid rgba(91, 184, 255, 0.26);
+        border-radius: 999px;
+        color: var(--ice);
+        background: rgba(3, 10, 24, 0.72);
+        box-shadow: inset 0 0 24px rgba(0, 109, 255, 0.12);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .motion-control:hover {
+        border-color: rgba(94, 200, 255, 0.74);
+      }
+
       .chapter-status {
         position: fixed;
         left: 24px;
@@ -569,7 +590,8 @@
         }
 
         .progress,
-        .hud-label {
+        .hud-label,
+        .motion-control {
           display: none;
         }
       }
@@ -822,6 +844,9 @@
       <span id="chapter-index">00 / 04</span>
       <span id="chapter-name">signal</span>
     </div>
+    <button class="motion-control" id="motion-control" type="button" aria-pressed="true">
+      motion on
+    </button>
     <div class="hud-label" aria-hidden="true">scroll drives camera / pointer bends field</div>
 
     <script type="module">
@@ -831,9 +856,12 @@
       const progressBar = document.querySelector("#progress-bar");
       const chapterIndex = document.querySelector("#chapter-index");
       const chapterName = document.querySelector("#chapter-name");
+      const motionControl = document.querySelector("#motion-control");
       const navLinks = [...document.querySelectorAll("[data-nav]")];
       const chapters = [...document.querySelectorAll("[data-chapter]")];
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const motionScale = reducedMotion ? 0.42 : 1;
+      let motionEnabled = localStorage.getItem("portfolio-motion") !== "off";
 
       const chapterNames = ["signal", "work", "taste", "featured", "contact"];
       const focusPoints = [
@@ -1296,9 +1324,15 @@
         updateScrollState();
       }
 
+      function updateMotionControl() {
+        motionControl.textContent = motionEnabled ? "motion on" : "motion off";
+        motionControl.setAttribute("aria-pressed", String(motionEnabled));
+      }
+
       function render(time) {
-        smoothPointer.lerp(pointer, reducedMotion ? 0.12 : 0.045);
-        camera.position.lerp(targetCamera, reducedMotion ? 0.18 : 0.07);
+        const activeTime = motionEnabled ? time * motionScale : 0;
+        smoothPointer.lerp(pointer, reducedMotion ? 0.08 : 0.045);
+        camera.position.lerp(targetCamera, reducedMotion ? 0.12 : 0.07);
 
         const exact = scrollProgress * (focusPoints.length - 1);
         const lower = Math.floor(exact);
@@ -1309,21 +1343,24 @@
         lookTarget.y += smoothPointer.y * 0.32;
         camera.lookAt(lookTarget);
 
-        root.rotation.y = smoothPointer.x * 0.05;
-        root.rotation.x = smoothPointer.y * 0.03;
-        particles.rotation.y = time * 0.000025;
-        particles.rotation.x = Math.sin(time * 0.00018) * 0.04;
-        groups.forEach((group) => group.userData.tick?.(time));
+        root.rotation.y = smoothPointer.x * 0.05 + (motionEnabled ? Math.sin(activeTime * 0.00018) * 0.018 : 0);
+        root.rotation.x = smoothPointer.y * 0.03 + (motionEnabled ? Math.cos(activeTime * 0.00016) * 0.012 : 0);
+        particles.rotation.y = activeTime * 0.00004;
+        particles.rotation.x = Math.sin(activeTime * 0.00018) * 0.04;
+        groups.forEach((group) => group.userData.tick?.(activeTime));
 
         renderer.render(scene, camera);
-        if (!reducedMotion) {
-          animationFrame = requestAnimationFrame(render);
-        }
+        animationFrame = requestAnimationFrame(render);
       }
 
       window.addEventListener("scroll", updateScrollState, { passive: true });
       window.addEventListener("resize", resize);
       window.addEventListener("pointermove", updatePointer, { passive: true });
+      motionControl.addEventListener("click", () => {
+        motionEnabled = !motionEnabled;
+        localStorage.setItem("portfolio-motion", motionEnabled ? "on" : "off");
+        updateMotionControl();
+      });
       window.addEventListener("pagehide", () => {
         cancelAnimationFrame(animationFrame);
         renderer.dispose();
@@ -1331,9 +1368,8 @@
 
       resize();
       updateScrollState();
-      if (!reducedMotion) {
-        animationFrame = requestAnimationFrame(render);
-      }
+      updateMotionControl();
+      animationFrame = requestAnimationFrame(render);
     </script>
   </body>
 </html>
