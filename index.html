@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Lucas Souza builds AI products and production systems with spec-first engineering discipline."
+    />
+    <title>Lucas Souza — Systems Engineer</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b09;
+        --bg-soft: #12110d;
+        --surface: #151410;
+        --surface-strong: #1d1b15;
+        --text: #f2ead8;
+        --muted: #b9ad96;
+        --faint: #786f61;
+        --line: #373124;
+        --cyan: #c79a5b;
+        --violet: #8b9171;
+        --green: #91a36b;
+        --pink: #c0a16d;
+        --radius: 8px;
+        --shadow: 0 24px 90px rgba(0, 0, 0, 0.36);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        font-family:
+          "IBM Plex Sans", Aptos, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+        background:
+          radial-gradient(circle at 16% 18%, rgba(199, 154, 91, 0.12), transparent 28rem),
+          radial-gradient(circle at 78% 6%, rgba(126, 141, 166, 0.08), transparent 30rem),
+          linear-gradient(180deg, #0b0b09 0%, #11100c 54%, #0b0b09 100%);
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        content: "";
+        background-image:
+          linear-gradient(rgba(199, 154, 91, 0.052) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(199, 154, 91, 0.052) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 28px 0;
+      }
+
+      .mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text);
+        font-weight: 760;
+      }
+
+      .mark-symbol {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(199, 154, 91, 0.48);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(135deg, rgba(199, 154, 91, 0.14), rgba(139, 145, 113, 0.1)),
+          var(--surface);
+        box-shadow: 0 0 26px rgba(199, 154, 91, 0.12);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        padding: 8px 0;
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+        gap: 56px;
+        align-items: center;
+        min-height: calc(100vh - 92px);
+        padding: 42px 0 86px;
+      }
+
+      .hero h1 {
+        max-width: 820px;
+        margin: 0;
+        color: var(--text);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(52px, 7vw, 92px);
+        line-height: 0.98;
+        font-weight: 700;
+      }
+
+      .hero h1 span {
+        color: var(--cyan);
+        font-style: italic;
+      }
+
+      .hero-copy {
+        max-width: 690px;
+        margin: 28px 0 0;
+        color: var(--muted);
+        font-size: clamp(18px, 2vw, 23px);
+        line-height: 1.55;
+      }
+
+      .hero-copy strong {
+        color: var(--text);
+        font-weight: 680;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--text);
+        background: rgba(21, 20, 16, 0.72);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .button.primary {
+        border-color: rgba(199, 154, 91, 0.55);
+        background: rgba(199, 154, 91, 0.14);
+        box-shadow: 0 0 34px rgba(199, 154, 91, 0.1);
+      }
+
+      .button:hover {
+        border-color: rgba(248, 250, 252, 0.4);
+        transform: translateY(-1px);
+      }
+
+      .console {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(199, 154, 91, 0.18);
+        border-radius: 14px;
+        background:
+          linear-gradient(180deg, rgba(29, 27, 21, 0.88), rgba(12, 12, 10, 0.92)),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .console::before {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        content: "";
+        background: linear-gradient(120deg, rgba(199, 154, 91, 0.1), transparent 42%, rgba(139, 145, 113, 0.08));
+        opacity: 0.62;
+      }
+
+      .console-top {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(199, 154, 91, 0.14);
+        color: var(--faint);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .dots {
+        display: inline-flex;
+        gap: 7px;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--line);
+      }
+
+      .dot:nth-child(1) {
+        background: #fb7185;
+      }
+
+      .dot:nth-child(2) {
+        background: #facc15;
+      }
+
+      .dot:nth-child(3) {
+        background: #22c55e;
+      }
+
+      .console-body {
+        position: relative;
+        display: grid;
+        gap: 14px;
+        padding: 24px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 16px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid rgba(199, 154, 91, 0.13);
+        border-radius: var(--radius);
+        background: rgba(11, 11, 9, 0.52);
+      }
+
+      .step code {
+        color: var(--cyan);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 13px;
+        font-weight: 760;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .step strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      section {
+        padding: 84px 0;
+        border-top: 1px solid rgba(148, 163, 184, 0.12);
+      }
+
+      .section-title {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 42px;
+        align-items: start;
+        margin-bottom: 34px;
+      }
+
+      .section-title h2 {
+        margin: 0;
+        font-size: 13px;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-weight: 760;
+        color: var(--cyan);
+        text-transform: uppercase;
+      }
+
+      .section-title p {
+        max-width: 760px;
+        margin: 0;
+        color: var(--text);
+        font-size: clamp(26px, 3.6vw, 44px);
+        line-height: 1.08;
+        font-weight: 760;
+      }
+
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .work-item,
+      .repo {
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        border-radius: 12px;
+        background: rgba(17, 24, 39, 0.58);
+      }
+
+      .work-item {
+        padding: 24px;
+      }
+
+      .work-item h3,
+      .repo h3 {
+        margin: 0 0 10px;
+        color: var(--text);
+        font-size: 22px;
+      }
+
+      .work-item p,
+      .repo p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.62;
+      }
+
+      .principles {
+        display: grid;
+        gap: 10px;
+      }
+
+      .principle {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 18px;
+        padding: 18px 0;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      }
+
+      .principle strong {
+        color: var(--text);
+      }
+
+      .principle span {
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .repos {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .repo {
+        display: flex;
+        flex-direction: column;
+        min-height: 230px;
+        padding: 24px;
+      }
+
+      .repo .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 22px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 999px;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .footer {
+        padding: 28px 0 42px;
+        color: var(--faint);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      @media (max-width: 860px) {
+        .page {
+          width: min(100% - 28px, 1120px);
+        }
+
+        .nav {
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 10px 14px;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: auto;
+          padding: 50px 0 72px;
+        }
+
+        .hero h1 {
+          font-size: clamp(43px, 12.6vw, 68px);
+        }
+
+        .console {
+          max-width: 620px;
+        }
+
+        .section-title {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .work-grid,
+        .repos {
+          grid-template-columns: 1fr;
+        }
+
+        .principle {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .nav {
+          display: grid;
+        }
+
+        .nav-links {
+          justify-content: flex-start;
+        }
+
+        .actions,
+        .contact {
+          display: grid;
+        }
+
+        .button {
+          width: 100%;
+        }
+
+        .step {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="mark" href="#top" aria-label="Lucas Souza home">
+          <span class="mark-symbol" aria-hidden="true"></span>
+          <span>Lucas Souza</span>
+        </a>
+        <div class="nav-links">
+          <a href="#work">Work</a>
+          <a href="#principles">Principles</a>
+          <a href="#featured">Featured</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div>
+            <h1 id="hero-title">Systems first. <span>Code downstream.</span></h1>
+            <p class="hero-copy">
+              I build AI products and production systems from specs, boundaries,
+              contracts, tests, deploys, smoke checks, and feedback loops.
+              <strong>Language is detail. Engineering is not.</strong>
+            </p>
+            <div class="actions" aria-label="Primary links">
+              <a class="button primary" href="https://github.com/lennix1337">GitHub</a>
+              <a class="button" href="https://www.linkedin.com/in/lucaszsouza/">LinkedIn</a>
+              <a class="button" href="mailto:swlucas05@gmail.com">Email</a>
+            </div>
+          </div>
+
+          <div class="console" aria-label="Engineering operating system">
+            <div class="console-top">
+              <span class="dots" aria-hidden="true">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </span>
+              <span>operating-system.md</span>
+            </div>
+            <div class="console-body">
+              <div class="step">
+                <code>01 spec</code>
+                <p><strong>Define work.</strong> Problem, constraints, success criteria, non-goals.</p>
+              </div>
+              <div class="step">
+                <code>02 design</code>
+                <p><strong>Shape system.</strong> Boundaries, contracts, data flow, failure modes.</p>
+              </div>
+              <div class="step">
+                <code>03 verify</code>
+                <p><strong>Prove behavior.</strong> Tests, CI, deploy, smoke, production feedback.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="work" aria-labelledby="work-title">
+          <div class="section-title">
+            <h2 id="work-title">Now</h2>
+            <p>Building clinical AI workflows, academic systems, and internal platforms.</p>
+          </div>
+          <div class="work-grid">
+            <article class="work-item">
+              <h3>DentAI</h3>
+              <p>
+                Tech lead on an AI-first dental platform: RAG, Gemini, clinical
+                assistant workflows, retention automation, and production release flow.
+              </p>
+            </article>
+            <article class="work-item">
+              <h3>UNIVALI</h3>
+              <p>
+                Leading academic systems work with Next.js, TypeScript, and internal
+                platform engineering.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="principles" aria-labelledby="principles-title">
+          <div class="section-title">
+            <h2 id="principles-title">Taste</h2>
+            <p>Small interfaces. Explicit contracts. Boring deploys. Sharp feedback loops.</p>
+          </div>
+          <div class="principles">
+            <div class="principle">
+              <strong>AI products</strong>
+              <span>Built for real workflows, not demos. Prompting without system design is gambling.</span>
+            </div>
+            <div class="principle">
+              <strong>Backend systems</strong>
+              <span>Clear boundaries, observable failure modes, contract-first behavior.</span>
+            </div>
+            <div class="principle">
+              <strong>Frontend flows</strong>
+              <span>State, API behavior, and UX aligned enough that users do not feel machinery.</span>
+            </div>
+            <div class="principle">
+              <strong>Release discipline</strong>
+              <span>Tests, CI, deploy visibility, smoke checks, and root-cause fixes.</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="featured" aria-labelledby="featured-title">
+          <div class="section-title">
+            <h2 id="featured-title">Featured</h2>
+            <p>Public work with practical developer workflows.</p>
+          </div>
+          <div class="repos">
+            <a class="repo" href="https://github.com/lennix1337/Genexus18MCP">
+              <h3>Genexus18MCP</h3>
+              <p>
+                MCP server for GeneXus 18. Brings Claude/Cursor-style workflows
+                to GeneXus codebases.
+              </p>
+              <div class="meta">
+                <span class="tag">C#</span>
+                <span class="tag">MCP</span>
+                <span class="tag">Developer tools</span>
+              </div>
+            </a>
+            <a class="repo" href="https://github.com/lennix1337/locoChat">
+              <h3>locoChat</h3>
+              <p>Web interface for Loco stream chat.</p>
+              <div class="meta">
+                <span class="tag">JavaScript</span>
+                <span class="tag">Web UI</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section id="contact" aria-labelledby="contact-title">
+          <div class="section-title">
+            <h2 id="contact-title">Reach me</h2>
+            <p>If you care about product engineering, AI systems, or strong opinions, DM is open.</p>
+          </div>
+          <div class="contact">
+            <a class="button primary" href="https://www.linkedin.com/in/lucaszsouza/">LinkedIn</a>
+            <a class="button" href="mailto:swlucas05@gmail.com">Email</a>
+            <a class="button" href="https://github.com/lennix1337">GitHub</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        spec -> design -> contracts -> tests -> deploy -> smoke -> feedback
+      </footer>
+    </div>
+  </body>
+</html>
