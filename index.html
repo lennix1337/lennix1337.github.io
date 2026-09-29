@@ -440,7 +440,7 @@
         <h2 id="work-title">Selected work</h2>
         <ul class="work">
           <li>
-            <a href="https://github.com/redhat-et/ripwire" data-pulse>
+            <a href="ripwire-windows-port.html" data-pulse>
               <h3>ripwire</h3>
               <p>
                 The ripgrep of AI context: a zero-dependency C++23 CLI and MCP
@@ -455,6 +455,8 @@
                 <dd>C++23</dd>
                 <dt>Stars</dt>
                 <dd><span data-stars="redhat-et/ripwire">2,363</span> stars</dd>
+                <dt>Write-up</dt>
+                <dd>Read the case study</dd>
               </dl>
             </a>
           </li>
@@ -464,7 +466,7 @@
               <p>
                 MCP server that lets Claude, Cursor and Codex work inside GeneXus
                 knowledge bases. Native SDK on GeneXus 16 to 18, legacy support
-                back to 8.
+                back to 8. Installed from npm more than 36,000 times.
                 <code>npx genexus-mcp@latest init</code>
               </p>
               <dl class="meta">
@@ -476,6 +478,8 @@
                 <dd><span data-stars="lennix1337/Genexus18MCP">35</span> stars</dd>
                 <dt>Forks</dt>
                 <dd><span data-forks="lennix1337/Genexus18MCP">26</span> forks</dd>
+                <dt>Downloads</dt>
+                <dd><span data-npm-month="genexus-mcp">9,154</span> npm downloads last month</dd>
               </dl>
             </a>
           </li>
@@ -1123,6 +1127,12 @@
             })
             .catch(() => {});
         }
+        document.querySelectorAll("[data-npm-month]").forEach((el) => {
+          fetch(`https://api.npmjs.org/downloads/point/last-month/${el.dataset.npmMonth}`)
+            .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+            .then((data) => (el.textContent = data.downloads.toLocaleString("en-US")))
+            .catch(() => {});
+        });
       }
 
       function smooth(t) {

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Porting ripwire to Windows · lennix</title>
+    <meta
+      name="description"
+      content="How Lucas Souza took ripwire, a 2,300-star C++23 tool, to native Windows with AI agents, and why the evidence mattered more than the code."
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta property="og:title" content="Porting ripwire to Windows" />
+    <meta
+      property="og:description"
+      content="A 2,300-star C++23 tool, native Windows, AI agents, and the evidence that got it merged."
+    />
+    <meta property="og:image" content="https://lennix1337.github.io/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Cellipse cx='24' cy='32' rx='13' ry='8' fill='none' stroke='%238e95a3' stroke-width='4'/%3E%3Cellipse cx='40' cy='32' rx='13' ry='8' fill='none' stroke='%237b3ff2' stroke-width='4'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,500;0,700;1,400&family=Chivo+Mono:wght@400&family=Pirata+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --void: #000000;
+        --bone: #ece7f4;
+        --ash: #a39cb4;
+        --violet: #7b3ff2;
+        --lilac: #b9a4ff;
+        --horn: #3e7a94;
+        --rule: rgba(185, 164, 255, 0.16);
+        --gutter: clamp(16px, 5vw, 72px);
+        --display: "Pirata One", Georgia, serif;
+        --body: "Chivo", "Segoe UI", system-ui, sans-serif;
+        --mono: "Chivo Mono", Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: var(--void);
+      }
+
+      body {
+        margin: 0;
+        color: var(--bone);
+        font: 400 1.125rem/1.65 var(--body);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: radial-gradient(circle at 85% 0%, rgba(123, 63, 242, 0.22), transparent 45%);
+        pointer-events: none;
+      }
+
+      ::selection {
+        background: var(--violet);
+      }
+
+      a {
+        color: var(--lilac);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      a:hover {
+        color: var(--bone);
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--lilac);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      .top {
+        padding: 24px var(--gutter);
+      }
+
+      .top a {
+        color: var(--bone);
+        font: 400 2rem/1 var(--display);
+        text-decoration: none;
+      }
+
+      article {
+        padding: 0 var(--gutter) 96px;
+      }
+
+      .measure {
+        max-width: 68ch;
+      }
+
+      header.intro {
+        padding: clamp(40px, 10vh, 120px) 0 clamp(32px, 6vh, 64px);
+        border-bottom: 1px solid var(--rule);
+        margin-bottom: 48px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 12ch;
+        font: 400 clamp(3.75rem, 11vw, 9rem) / 0.86 var(--display);
+        text-shadow: 0 0 60px rgba(123, 63, 242, 0.35);
+      }
+
+      .dek {
+        margin: 28px 0 0;
+        max-width: 44ch;
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      .byline {
+        margin: 20px 0 0;
+        color: var(--ash);
+        font-size: 1rem;
+      }
+
+      h2 {
+        margin: 64px 0 16px;
+        font: 400 clamp(2.2rem, 4.5vw, 3.25rem) / 1 var(--display);
+      }
+
+      p {
+        margin: 0 0 1.1em;
+      }
+
+      code {
+        font: 400 0.9em var(--mono);
+        color: var(--lilac);
+      }
+
+      blockquote {
+        margin: 32px 0;
+        padding: 4px 0 4px 24px;
+        border-left: 2px solid var(--violet);
+        font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+        line-height: 1.35;
+        font-weight: 500;
+      }
+
+      blockquote cite {
+        display: block;
+        margin-top: 10px;
+        color: var(--ash);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+      }
+
+      .table-wrap {
+        margin: 28px 0;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 460px;
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+      }
+
+      caption {
+        margin-bottom: 12px;
+        color: var(--ash);
+        font-size: 0.9375rem;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--rule);
+        text-align: right;
+      }
+
+      th:first-child,
+      td:first-child {
+        padding-left: 0;
+        text-align: left;
+      }
+
+      thead th {
+        color: var(--ash);
+        font-weight: 500;
+        font-size: 0.9375rem;
+      }
+
+      td.win {
+        color: var(--lilac);
+        font-weight: 700;
+      }
+
+      ul {
+        padding-left: 1.2em;
+        margin: 0 0 1.2em;
+      }
+
+      li {
+        margin-bottom: 0.45em;
+      }
+
+      .timeline {
+        list-style: none;
+        padding: 0;
+        margin: 24px 0 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      .timeline li {
+        display: grid;
+        grid-template-columns: 7.5rem minmax(0, 1fr);
+        gap: 4px 24px;
+        margin: 0;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .timeline time {
+        color: var(--lilac);
+        font-weight: 700;
+      }
+
+      .lessons li {
+        margin-bottom: 0.9em;
+      }
+
+      .end {
+        margin-top: 72px;
+        padding-top: 32px;
+        border-top: 1px solid var(--rule);
+        color: var(--ash);
+      }
+
+      @media (max-width: 560px) {
+        .timeline li {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="top" aria-label="Site">
+      <a href="./">lennix</a>
+    </nav>
+
+    <article>
+      <header class="intro">
+        <h1>Porting ripwire to Windows</h1>
+        <p class="dek">
+          I took a 2,300-star C++23 tool to native Windows with AI agents. The
+          code got it opened. The evidence got it merged.
+        </p>
+        <p class="byline">
+          Lucas Souza, September 2026. Pull request
+          <a href="https://github.com/redhat-et/ripwire/pull/44">#44</a>, shipped in
+          <a href="https://github.com/redhat-et/ripwire/releases/tag/v0.6.2">ripwire 0.6.2</a>.
+        </p>
+      </header>
+
+      <div class="measure">
+        <h2>The gap</h2>
+        <p>
+          <a href="https://github.com/redhat-et/ripwire">ripwire</a> is the
+          ripgrep of AI context: a zero-dependency C++23 CLI and MCP server that
+          gives coding agents a ranked map of a repository before they read it.
+          It ran on Linux and macOS. Windows users ran the Linux binary inside
+          WSL2 and wrote shims so their tools could find it.
+        </p>
+        <p>
+          On September 7 I opened #44: native Windows x64 on clang-cl and the
+          MSVC ABI, with no external dependencies. It came to 8,891 added lines
+          across 175 files, covering UTF-8 and long paths, symlinks and
+          junctions, process trees inside Job Objects, file locking, the MCP
+          directory watcher, PATH and PATHEXT search, and an ACL-protected
+          cache directory.
+        </p>
+
+        <h2>How it was built</h2>
+        <p>
+          AI agents wrote the code. My job was everything around it: deciding
+          what “works on Windows” had to mean, writing the gates that proved
+          each piece, and reading every result before it went into the pull
+          request. The first automated review pass posted twelve actionable
+          findings. They were fixed the same day, the next two passes found one
+          each, and the last found none.
+        </p>
+
+        <h2>The question that wasn’t code</h2>
+        <p>
+          The maintainer’s first answer was honest: a new platform is a support
+          commitment that every future pull request inherits, and that was a
+          scope decision to settle before any review. No timeline, no promise.
+        </p>
+        <p>
+          So I kept the branch alive. Main moved fast, and I merged it back
+          four times in five days so the port never went stale while the
+          decision was pending.
+        </p>
+
+        <h2>Numbers, not adjectives</h2>
+        <p>
+          On September 16 the maintainers decided to move all operating-system
+          switching behind one header, <code>src/infra/os.h</code>, and to do
+          that refactor themselves. They asked me to stop pushing. I held the
+          branch and posted a local evidence snapshot instead: the Windows gates
+          that passed, the builds that passed, what was still unproven, and a
+          benchmark on the same NTFS volume.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <caption>
+              480-file corpus on one NTFS volume, 5 runs each, in milliseconds
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Operation</th>
+                <th scope="col">Native Windows</th>
+                <th scope="col">Linux in WSL</th>
+                <th scope="col">Faster</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Cold map</td><td>127</td><td>1,441</td><td class="win">11×</td></tr>
+              <tr><td>Warm retrieval</td><td>42</td><td>1,263</td><td class="win">30×</td></tr>
+              <tr><td>Report</td><td>125</td><td>1,428</td><td class="win">11×</td></tr>
+              <tr><td>Quality delta</td><td>247</td><td>5,252</td><td class="win">21×</td></tr>
+              <tr><td>Dead code</td><td>136</td><td>1,918</td><td class="win">14×</td></tr>
+              <tr><td>MCP call</td><td>1.2</td><td>2,113</td><td class="win">1,750×</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The same report said what the numbers did not show: Linux on WSL’s own
+          ext4 filesystem was still faster, so this was not a claim that Windows
+          beats Linux. It also cut the worker peak from 28–29 threads to 20 on
+          16 logical CPUs.
+        </p>
+        <blockquote>
+          “Jeepers! that is quite a measurement”
+          <cite>ripwire maintainer, on the benchmark</cite>
+        </blockquote>
+        <p>
+          The maintainers asked me to push the snapshot to its own branch so
+          their refactor could build on it with my authorship intact. Eight
+          fixes from the port changed Linux and macOS behaviour too, so they
+          landed separately in
+          <a href="https://github.com/redhat-et/ripwire/pull/292">#292</a>,
+          each credited to me and each with a gate that fails before the fix:
+          unescaped JSON paths in <code>wrap</code>, a one-byte over-read in
+          <code>--expand</code>, a race in the MCP edit lock, a read error
+          reported as success, and memory released earlier during ingest, which
+          lowered peak RSS on an LLVM subset by about 200 MiB.
+        </p>
+
+        <h2>Failing loudly</h2>
+        <p>
+          On September 19 the refactored branch was ready, but nobody had built
+          it on Windows. It had only compiled against a hand-written mock SDK.
+          I ran the maintainers’ checklist on real hardware and reported what
+          happened: five build failures on the unmodified branch, the first
+          error text for each, and every downstream item marked blocked instead
+          of guessed.
+        </p>
+        <p>
+          Those five failures became concrete fixes. Two days later both clang-cl
+          and Microsoft’s <code>cl.exe</code> built ripwire, a Windows CI job
+          gated every full run, and native Windows shipped in 0.6.2.
+        </p>
+        <blockquote>
+          “this was a contributor report that changed a release”
+          <cite>ripwire maintainer, merging #44</cite>
+        </blockquote>
+
+        <h2>After the merge</h2>
+        <p>
+          The <a href="https://github.com/redhat-et/ripwire/releases/tag/v0.6.2">0.6.2 changelog</a>
+          credits the port to me by name. 0.6.3 added a Windows x64 release
+          asset as a preview, and I tested it on a second machine and shell
+          configuration in
+          <a href="https://github.com/redhat-et/ripwire/issues/334">#334</a>.
+          Fixes from that round, including a PowerShell PATH hint, are credited
+          in 0.6.4 and 0.6.5.
+        </p>
+
+        <ol class="timeline" aria-label="Timeline">
+          <li><time datetime="2026-09-07">Sep 7</time><span>#44 opened: native Windows x64, 175 files.</span></li>
+          <li><time datetime="2026-09-08">Sep 8</time><span>Maintainers raise the scope question. No timeline.</span></li>
+          <li><time datetime="2026-09-16">Sep 16</time><span>Branch held; evidence snapshot and benchmark posted.</span></li>
+          <li><time datetime="2026-09-19">Sep 19</time><span>The <code>os.h</code> seam and eight credited fixes land. Windows run finds five build failures.</span></li>
+          <li><time datetime="2026-09-21">Sep 21</time><span>#44 merged. Native Windows ships in 0.6.2.</span></li>
+          <li><time datetime="2026-09-25">Sep 25</time><span>0.6.3 ships a Windows release asset; second-machine test in #334.</span></li>
+        </ol>
+
+        <h2>What I’d tell anyone doing this with AI</h2>
+        <ul class="lessons">
+          <li>
+            The agents write the code. You own the definition of done and the
+            proof that you met it.
+          </li>
+          <li>
+            Say what is not proven. The line about ext4 being faster did more
+            for trust than any adjective.
+          </li>
+          <li>
+            A precise failure report is a contribution. Five build failures with
+            their first line of output moved a release more than a green claim
+            would have.
+          </li>
+          <li>
+            Follow the maintainers’ plan. Hold the branch, snapshot the work,
+            never force-push over their refactor.
+          </li>
+        </ul>
+
+        <p class="end">
+          Want this kind of work on your codebase?
+          <a href="mailto:swlucas05@gmail.com">Email me</a>, or go
+          <a href="./">back to lennix1337.github.io</a>.
+        </p>
+      </div>
+    </article>
+  </body>
+</html>
