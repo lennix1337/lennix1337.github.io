@@ -2115,6 +2115,9 @@
       const rigAside = new THREE.Vector3();
       const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
       let pulse = 0;
+      window.__bump = (v) => {
+        pulse = Math.max(pulse, v);
+      };
       let elapsed = 0;
       const introStart = performance.now();
       const contact = document.getElementById("contact");
@@ -2129,142 +2132,6 @@
       document.querySelectorAll("[data-pulse]").forEach((el) => {
         el.addEventListener("pointerenter", () => (pulse = Math.max(pulse, 0.6)));
         el.addEventListener("focus", () => (pulse = Math.max(pulse, 0.6)));
-      });
-
-      // Cross-highlight SVG schematic nodes, live runtime flow traces, scroll progress & copy actions.
-      const archSvg = document.getElementById("arch-svg");
-      const flowReadout = document.getElementById("flow-readout");
-      const flowBtns = [...document.querySelectorAll(".flow-btn")];
-      const svgNodes = [...document.querySelectorAll(".svg-node")];
-      const subsystems = [...document.querySelectorAll(".subsystem")];
-
-      const FLOWS = {
-        phone: {
-          nodes: ["slack", "optchat", "goal", "subagents", "code", "hands"],
-          zone: "core",
-          label: "[01 · PHONE → PR]",
-          text: "Voice note on Slack (local faster-whisper) → pi-optchat plans with zoomable memory + pi-goal-x → pi-subagents run parallel worktrees with ripwire/lsp/hashline + browser verification → PR ship-review.",
-        },
-        ci: {
-          nodes: ["gitwatch", "optchat", "subagents", "code", "vault"],
-          zone: "core",
-          label: "[02 · RED CI → AUTO-FIX]",
-          text: "pi-gitwatch catches a failing GitHub Actions run via GraphQL → wakes pi-optchat with --log-failed → worker reproduces & patches → green merge cleans worktree & updates pi-avatar mood.",
-        },
-        quota: {
-          nodes: ["optchat", "multi", "subagents"],
-          zone: "fleet",
-          label: "[03 · QUOTA → FAILOVER]",
-          text: "pi-multi-account catches 429/quota exhaustion → cools slot, rotates to next Claude/Codex/Kimi/Cursor account preserving quality band & reasoning level → auto-resumes interrupted turn.",
-        },
-        vault: {
-          nodes: ["optchat", "subagents", "vault"],
-          zone: "hands",
-          label: "[04 · SECRET GUARD]",
-          text: "pi-vault injects Windows DPAPI / Credential Manager secret into one command → tool_call blocks leaks → tool_result redacts stored values & token shapes before output reaches the model.",
-        },
-      };
-
-      let activeFlow = null;
-      function applyFlow(key) {
-        activeFlow = activeFlow === key ? null : key;
-        flowBtns.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.flow === activeFlow)));
-        if (!activeFlow) {
-          archSvg.classList.remove("has-flow");
-          svgNodes.forEach((n) => n.classList.remove("is-flow-hit"));
-          flowReadout.innerHTML =
-            "<strong>[IDLE]</strong> Select a runtime flow above or click any architecture block to highlight its closed-loop path across the harness.";
-          return;
-        }
-        const f = FLOWS[activeFlow];
-        archSvg.classList.add("has-flow");
-        svgNodes.forEach((n) => n.classList.toggle("is-flow-hit", f.nodes.includes(n.dataset.node)));
-        setActiveZone(f.zone);
-        flowReadout.innerHTML = `<strong>${f.label}</strong> ${f.text}`;
-        pulse = Math.max(pulse, 0.85);
-      }
-
-      flowBtns.forEach((btn) => btn.addEventListener("click", () => applyFlow(btn.dataset.flow)));
-
-      function setActiveZone(zone) {
-        svgNodes.forEach((n) => n.classList.toggle("is-active", n.dataset.zone === zone));
-        subsystems.forEach((s) => s.classList.toggle("is-active", s.dataset.subsystem === zone));
-      }
-      svgNodes.forEach((node) => {
-        const activate = () => {
-          setActiveZone(node.dataset.zone);
-          pulse = Math.max(pulse, 0.55);
-        };
-        node.addEventListener("pointerenter", activate);
-        node.addEventListener("focus", activate);
-        node.addEventListener("click", () => {
-          activate();
-          const panel = document.querySelector(`.subsystem[data-subsystem="${node.dataset.zone}"]`);
-          if (panel) panel.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
-        });
-        node.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            node.dispatchEvent(new Event("click"));
-          }
-        });
-      });
-      subsystems.forEach((sub) => {
-        sub.addEventListener("pointerenter", () => setActiveZone(sub.dataset.subsystem));
-      });
-
-      // Scroll progress hairline & active section indicator
-      const progressBar = document.getElementById("scroll-progress");
-      const navLinks = [...document.querySelectorAll('.top-nav a[href^="#"]')];
-      function updateScrollProgress() {
-        const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-        progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, scrollY / max))})`;
-      }
-      addEventListener("scroll", updateScrollProgress, { passive: true });
-      updateScrollProgress();
-
-      const observedSections = navLinks
-        .map((a) => document.querySelector(a.getAttribute("href")))
-        .filter(Boolean);
-      if ("IntersectionObserver" in window) {
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              const id = `#${entry.target.id}`;
-              navLinks.forEach((a) => {
-                if (a.getAttribute("href") === id) a.setAttribute("aria-current", "location");
-                else a.removeAttribute("aria-current");
-              });
-            }
-          },
-          { rootMargin: "-35% 0px -55% 0px" },
-        );
-        observedSections.forEach((s) => io.observe(s));
-      }
-
-      // Copy-to-clipboard microinteractions
-      document.querySelectorAll("[data-copy]").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const val = btn.dataset.copy;
-          const orig = btn.textContent;
-          const finish = () => {
-            btn.classList.add("copied");
-            btn.textContent = "Copied";
-            pulse = Math.max(pulse, 0.7);
-            setTimeout(() => {
-              btn.classList.remove("copied");
-              btn.textContent = orig;
-            }, 1600);
-          };
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(val).then(finish).catch(finish);
-          } else {
-            finish();
-          }
-        });
       });
 
       function scrollState() {
@@ -2375,6 +2242,146 @@
           return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
         };
       }
+    </script>
+    <script type="module">
+      // Interactions live in their own module so a missing WebGL context cannot disable them.
+      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const bump = (v) => window.__bump && window.__bump(v);
+      // Cross-highlight SVG schematic nodes, live runtime flow traces, scroll progress & copy actions.
+      const archSvg = document.getElementById("arch-svg");
+      const flowReadout = document.getElementById("flow-readout");
+      const flowBtns = [...document.querySelectorAll(".flow-btn")];
+      const svgNodes = [...document.querySelectorAll(".svg-node")];
+      const subsystems = [...document.querySelectorAll(".subsystem")];
+
+      const FLOWS = {
+        phone: {
+          nodes: ["slack", "optchat", "goal", "subagents", "code", "hands"],
+          zone: "core",
+          label: "[01 · PHONE → PR]",
+          text: "Voice note on Slack (local faster-whisper) → pi-optchat plans with zoomable memory + pi-goal-x → pi-subagents run parallel worktrees with ripwire/lsp/hashline + browser verification → PR ship-review.",
+        },
+        ci: {
+          nodes: ["gitwatch", "optchat", "subagents", "code", "vault"],
+          zone: "core",
+          label: "[02 · RED CI → AUTO-FIX]",
+          text: "pi-gitwatch catches a failing GitHub Actions run via GraphQL → wakes pi-optchat with --log-failed → worker reproduces & patches → green merge cleans worktree & updates pi-avatar mood.",
+        },
+        quota: {
+          nodes: ["optchat", "multi", "subagents"],
+          zone: "fleet",
+          label: "[03 · QUOTA → FAILOVER]",
+          text: "pi-multi-account catches 429/quota exhaustion → cools slot, rotates to next Claude/Codex/Kimi/Cursor account preserving quality band & reasoning level → auto-resumes interrupted turn.",
+        },
+        vault: {
+          nodes: ["optchat", "subagents", "vault"],
+          zone: "hands",
+          label: "[04 · SECRET GUARD]",
+          text: "pi-vault injects Windows DPAPI / Credential Manager secret into one command → tool_call blocks leaks → tool_result redacts stored values & token shapes before output reaches the model.",
+        },
+      };
+
+      let activeFlow = null;
+      function applyFlow(key) {
+        activeFlow = activeFlow === key ? null : key;
+        flowBtns.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.flow === activeFlow)));
+        if (!activeFlow) {
+          archSvg.classList.remove("has-flow");
+          svgNodes.forEach((n) => n.classList.remove("is-flow-hit"));
+          flowReadout.innerHTML =
+            "<strong>[IDLE]</strong> Select a runtime flow above or click any architecture block to highlight its closed-loop path across the harness.";
+          return;
+        }
+        const f = FLOWS[activeFlow];
+        archSvg.classList.add("has-flow");
+        svgNodes.forEach((n) => n.classList.toggle("is-flow-hit", f.nodes.includes(n.dataset.node)));
+        setActiveZone(f.zone);
+        flowReadout.innerHTML = `<strong>${f.label}</strong> ${f.text}`;
+        bump(0.85);
+      }
+
+      flowBtns.forEach((btn) => btn.addEventListener("click", () => applyFlow(btn.dataset.flow)));
+
+      function setActiveZone(zone) {
+        svgNodes.forEach((n) => n.classList.toggle("is-active", n.dataset.zone === zone));
+        subsystems.forEach((s) => s.classList.toggle("is-active", s.dataset.subsystem === zone));
+      }
+      svgNodes.forEach((node) => {
+        const activate = () => {
+          setActiveZone(node.dataset.zone);
+          bump(0.55);
+        };
+        node.addEventListener("pointerenter", activate);
+        node.addEventListener("focus", activate);
+        node.addEventListener("click", () => {
+          activate();
+          const panel = document.querySelector(`.subsystem[data-subsystem="${node.dataset.zone}"]`);
+          if (panel) panel.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+        });
+        node.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            node.dispatchEvent(new Event("click"));
+          }
+        });
+      });
+      subsystems.forEach((sub) => {
+        sub.addEventListener("pointerenter", () => setActiveZone(sub.dataset.subsystem));
+      });
+
+      // Scroll progress hairline & active section indicator
+      const progressBar = document.getElementById("scroll-progress");
+      const navLinks = [...document.querySelectorAll('.top-nav a[href^="#"]')];
+      function updateScrollProgress() {
+        const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, scrollY / max))})`;
+      }
+      addEventListener("scroll", updateScrollProgress, { passive: true });
+      updateScrollProgress();
+
+      const observedSections = navLinks
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const id = `#${entry.target.id}`;
+              navLinks.forEach((a) => {
+                if (a.getAttribute("href") === id) a.setAttribute("aria-current", "location");
+                else a.removeAttribute("aria-current");
+              });
+            }
+          },
+          { rootMargin: "-35% 0px -55% 0px" },
+        );
+        observedSections.forEach((s) => io.observe(s));
+      }
+
+      // Copy-to-clipboard microinteractions
+      document.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const val = btn.dataset.copy;
+          const orig = btn.textContent;
+          const finish = () => {
+            btn.classList.add("copied");
+            btn.textContent = "Copied";
+            bump(0.7);
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.textContent = orig;
+            }, 1600);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(val).then(finish).catch(finish);
+          } else {
+            finish();
+          }
+        });
+      });
     </script>
   </body>
 </html>
