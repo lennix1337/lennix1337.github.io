@@ -8,7 +8,7 @@
       name="description"
       content="How Lucas Souza took ripwire, a 2,300-star C++23 tool, to native Windows with AI agents, and why the evidence mattered more than the code."
     />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#09090b" />
     <meta property="og:title" content="Porting ripwire to Windows" />
     <meta
       property="og:description"
@@ -18,44 +18,49 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Cellipse cx='24' cy='32' rx='13' ry='8' fill='none' stroke='%238e95a3' stroke-width='4'/%3E%3Cellipse cx='40' cy='32' rx='13' ry='8' fill='none' stroke='%237b3ff2' stroke-width='4'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2309090b'/%3E%3Crect x='2' y='2' width='60' height='60' rx='8' fill='none' stroke='%23272a30' stroke-width='2'/%3E%3Cellipse cx='24' cy='32' rx='13' ry='8' fill='none' stroke='%238b929e' stroke-width='4.5'/%3E%3Cellipse cx='40' cy='32' rx='13' ry='8' fill='none' stroke='%23ff5a1f' stroke-width='4.5'/%3E%3C/svg%3E"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,500;0,700;1,400&family=Chivo+Mono:wght@400&family=Pirata+One&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         color-scheme: dark;
-        --void: #000000;
-        --bone: #ece7f4;
-        --ash: #a39cb4;
-        --violet: #7b3ff2;
-        --lilac: #b9a4ff;
-        --horn: #3e7a94;
-        --rule: rgba(185, 164, 255, 0.16);
+        --bg: #09090b;
+        --surface: #111215;
+        --ink: #f4f3ef;
+        --muted: #9b9ea4;
+        --accent: #ff5a1f;
+        --accent-bright: #ff7745;
+        --rule: rgba(244, 243, 239, 0.13);
+        --rule-strong: rgba(244, 243, 239, 0.24);
         --gutter: clamp(16px, 5vw, 72px);
-        --display: "Pirata One", Georgia, serif;
-        --body: "Chivo", "Segoe UI", system-ui, sans-serif;
-        --mono: "Chivo Mono", Consolas, monospace;
+        --display: "Archivo Black", "Arial Narrow", system-ui, sans-serif;
+        --body: "Archivo", "Segoe UI", system-ui, sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
       }
 
       * {
         box-sizing: border-box;
       }
 
-      html,
-      body {
-        background: var(--void);
+      html {
+        background: var(--bg);
+        scrollbar-color: #2c2f36 var(--bg);
+        scrollbar-width: thin;
       }
 
       body {
         margin: 0;
-        color: var(--bone);
-        font: 400 1.125rem/1.65 var(--body);
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 1.0625rem/1.68 var(--body);
+        caret-color: var(--accent);
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
 
       body::before {
@@ -63,38 +68,67 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        background: radial-gradient(circle at 85% 0%, rgba(123, 63, 242, 0.22), transparent 45%);
         pointer-events: none;
+        background-image:
+          radial-gradient(circle at 86% 0%, rgba(255, 90, 31, 0.11), transparent 42%),
+          linear-gradient(to right, rgba(244, 243, 239, 0.028) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(244, 243, 239, 0.028) 1px, transparent 1px);
+        background-size: 100% 100%, 72px 72px, 72px 72px;
       }
 
       ::selection {
-        background: var(--violet);
+        background: var(--accent);
+        color: var(--bg);
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #2c2f36;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
       }
 
       a {
-        color: var(--lilac);
+        color: var(--accent);
         text-decoration-thickness: 1px;
-        text-underline-offset: 3px;
+        text-underline-offset: 4px;
+        transition: color 0.16s ease;
       }
 
       a:hover {
-        color: var(--bone);
+        color: var(--ink);
       }
 
       a:focus-visible {
-        outline: 2px solid var(--lilac);
+        outline: 2px solid var(--accent);
         outline-offset: 3px;
-        border-radius: 2px;
+        border-radius: 1px;
       }
 
       .top {
-        padding: 24px var(--gutter);
+        padding: 22px var(--gutter);
+        border-bottom: 1px solid var(--rule);
       }
 
       .top a {
-        color: var(--bone);
-        font: 400 2rem/1 var(--display);
+        color: var(--ink);
+        font: 400 1.5rem/1 var(--display);
+        letter-spacing: -0.035em;
         text-decoration: none;
+      }
+
+      .top a:hover {
+        color: var(--accent);
       }
 
       article {
@@ -106,67 +140,76 @@
       }
 
       header.intro {
-        padding: clamp(40px, 10vh, 120px) 0 clamp(32px, 6vh, 64px);
-        border-bottom: 1px solid var(--rule);
+        padding: clamp(44px, 9vh, 112px) 0 clamp(32px, 5.5vh, 56px);
+        border-bottom: 1px solid var(--rule-strong);
         margin-bottom: 48px;
       }
 
       h1 {
         margin: 0;
-        max-width: 12ch;
-        font: 400 clamp(3.75rem, 11vw, 9rem) / 0.86 var(--display);
-        text-shadow: 0 0 60px rgba(123, 63, 242, 0.35);
+        max-width: 14ch;
+        font: 400 clamp(2.4rem, 7vw, 5.75rem) / 0.94 var(--display);
+        letter-spacing: -0.035em;
+        text-wrap: balance;
       }
 
       .dek {
-        margin: 28px 0 0;
-        max-width: 44ch;
-        font-size: clamp(1.2rem, 2vw, 1.5rem);
-        line-height: 1.4;
+        margin: 26px 0 0;
+        max-width: 46ch;
+        font-size: clamp(1.15rem, 1.9vw, 1.45rem);
+        line-height: 1.42;
         font-weight: 500;
       }
 
       .byline {
         margin: 20px 0 0;
-        color: var(--ash);
-        font-size: 1rem;
+        color: var(--muted);
+        font: 400 0.875rem/1.55 var(--mono);
       }
 
       h2 {
-        margin: 64px 0 16px;
-        font: 400 clamp(2.2rem, 4.5vw, 3.25rem) / 1 var(--display);
+        margin: 64px 0 18px;
+        font: 400 clamp(1.75rem, 3.6vw, 2.65rem) / 1.02 var(--display);
+        letter-spacing: -0.025em;
+        text-wrap: balance;
       }
 
       p {
-        margin: 0 0 1.1em;
+        margin: 0 0 1.15em;
       }
 
       code {
-        font: 400 0.9em var(--mono);
-        color: var(--lilac);
+        padding: 0.1em 0.38em;
+        background: var(--surface);
+        border: 1px solid var(--rule);
+        font: 500 0.85em var(--mono);
+        color: var(--accent);
       }
 
       blockquote {
-        margin: 32px 0;
-        padding: 4px 0 4px 24px;
-        border-left: 2px solid var(--violet);
-        font-size: clamp(1.3rem, 2.4vw, 1.7rem);
-        line-height: 1.35;
-        font-weight: 500;
+        margin: 34px 0;
+        padding: 6px 0 6px 22px;
+        border-left: 1px solid var(--accent);
+        font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+        line-height: 1.38;
+        font-weight: 600;
+        letter-spacing: -0.015em;
       }
 
       blockquote cite {
         display: block;
         margin-top: 10px;
-        color: var(--ash);
-        font-size: 1rem;
+        color: var(--muted);
+        font: 400 0.8125rem/1.5 var(--mono);
         font-style: normal;
-        font-weight: 400;
       }
 
       .table-wrap {
-        margin: 28px 0;
+        margin: 32px 0;
         overflow-x: auto;
+        background: var(--surface);
+        border: 1px solid var(--rule-strong);
+        padding: 16px 18px 8px;
       }
 
       table {
@@ -177,9 +220,9 @@
       }
 
       caption {
-        margin-bottom: 12px;
-        color: var(--ash);
-        font-size: 0.9375rem;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font: 400 0.8125rem/1.5 var(--mono);
         text-align: left;
       }
 
@@ -188,64 +231,81 @@
         padding: 10px 12px;
         border-bottom: 1px solid var(--rule);
         text-align: right;
+        font: 400 0.875rem/1.45 var(--mono);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
       }
 
       th:first-child,
       td:first-child {
         padding-left: 0;
         text-align: left;
-      }
-
-      thead th {
-        color: var(--ash);
-        font-weight: 500;
+        font-family: var(--body);
         font-size: 0.9375rem;
       }
 
+      thead th {
+        color: var(--muted);
+        font: 500 0.75rem/1.4 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border-bottom-color: var(--rule-strong);
+      }
+
       td.win {
-        color: var(--lilac);
-        font-weight: 700;
+        color: var(--accent);
+        font-weight: 600;
       }
 
       ul {
-        padding-left: 1.2em;
-        margin: 0 0 1.2em;
+        padding-left: 1.25em;
+        margin: 0 0 1.25em;
       }
 
       li {
-        margin-bottom: 0.45em;
+        margin-bottom: 0.5em;
+      }
+
+      li::marker {
+        color: var(--accent);
       }
 
       .timeline {
         list-style: none;
         padding: 0;
-        margin: 24px 0 0;
-        border-top: 1px solid var(--rule);
+        margin: 28px 0 0;
+        border-top: 1px solid var(--rule-strong);
       }
 
       .timeline li {
         display: grid;
         grid-template-columns: 7.5rem minmax(0, 1fr);
-        gap: 4px 24px;
+        gap: 6px 24px;
         margin: 0;
-        padding: 14px 0;
+        padding: 15px 0;
         border-bottom: 1px solid var(--rule);
       }
 
       .timeline time {
-        color: var(--lilac);
-        font-weight: 700;
+        color: var(--accent);
+        font: 600 0.875rem/1.5 var(--mono);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-variant-numeric: tabular-nums;
       }
 
       .lessons li {
-        margin-bottom: 0.9em;
+        margin-bottom: 0.95em;
       }
 
       .end {
         margin-top: 72px;
-        padding-top: 32px;
-        border-top: 1px solid var(--rule);
-        color: var(--ash);
+        padding-top: 28px;
+        border-top: 1px solid var(--rule-strong);
+        color: var(--muted);
+        font: 400 0.9375rem/1.6 var(--mono);
       }
 
       @media (max-width: 560px) {
