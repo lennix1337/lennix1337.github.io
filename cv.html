@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV · Lucas Souza (lennix)</title>
+    <meta
+      name="description"
+      content="Curriculum Vitae of Lucas Souza — Senior Fullstack & AI Systems Engineer (TypeScript, Next.js, NestJS, React, PostgreSQL, C#, AI Agent Tooling). Fluent English."
+    />
+    <meta name="theme-color" content="#09090b" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2309090b'/%3E%3Crect x='2' y='2' width='60' height='60' rx='8' fill='none' stroke='%23272a30' stroke-width='2'/%3E%3Cellipse cx='24' cy='32' rx='13' ry='8' fill='none' stroke='%238b929e' stroke-width='4.5'/%3E%3Cellipse cx='40' cy='32' rx='13' ry='8' fill='none' stroke='%23ff5a1f' stroke-width='4.5'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #09090b;
+        --surface: #111215;
+        --ink: #f4f3ef;
+        --muted: #9b9ea4;
+        --accent: #ff5a1f;
+        --rule: rgba(244, 243, 239, 0.14);
+        --rule-strong: rgba(244, 243, 239, 0.25);
+        --gutter: clamp(16px, 5vw, 64px);
+        --display: "Archivo Black", "Arial Narrow", system-ui, sans-serif;
+        --body: "Archivo", "Segoe UI", system-ui, sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 0.98rem/1.58 var(--body);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: var(--bg);
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      a:hover {
+        color: var(--ink);
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px var(--gutter);
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .bar a {
+        color: var(--ink);
+        font: 400 1.4rem/1 var(--display);
+        letter-spacing: -0.035em;
+        text-decoration: none;
+      }
+
+      .bar a:hover {
+        color: var(--accent);
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        cursor: pointer;
+        padding: 10px 16px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: var(--bg);
+        font: 600 0.78rem/1 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+
+      .sheet {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: clamp(32px, 6vh, 64px) var(--gutter) 80px;
+      }
+
+      header.head {
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--rule-strong);
+      }
+
+      h1 {
+        margin: 0;
+        font: 400 clamp(2.25rem, 6vw, 4rem) / 0.95 var(--display);
+        letter-spacing: -0.035em;
+      }
+
+      .subtitle {
+        margin: 12px 0 0;
+        font: 500 1.15rem/1.4 var(--body);
+        color: var(--ink);
+      }
+
+      .contact-line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted);
+        font: 400 0.8125rem/1.5 var(--mono);
+      }
+
+      .sec {
+        margin-top: 34px;
+      }
+
+      .sec h2 {
+        margin: 0 0 14px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--rule);
+        font: 400 1.25rem/1.1 var(--display);
+        letter-spacing: -0.02em;
+        color: var(--accent);
+      }
+
+      .entry {
+        display: grid;
+        grid-template-columns: 11rem minmax(0, 1fr);
+        gap: 6px 24px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .entry:last-child {
+        border-bottom: 0;
+      }
+
+      .when {
+        color: var(--muted);
+        font: 500 0.8125rem/1.5 var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .entry h3 {
+        margin: 0;
+        font: 700 1.05rem/1.3 var(--body);
+      }
+
+      .entry h3 span {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .entry p {
+        margin: 6px 0 0;
+        color: var(--ink);
+      }
+
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .skill-box {
+        padding: 14px;
+        background: var(--surface);
+        border: 1px solid var(--rule);
+      }
+
+      .skill-box h3 {
+        margin: 0 0 6px;
+        font: 600 0.78rem/1.3 var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+      }
+
+      .skill-box p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--ink);
+      }
+
+      @media (max-width: 640px) {
+        .entry {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        :root {
+          color-scheme: light;
+          --bg: #ffffff;
+          --surface: #f7f7f7;
+          --ink: #111111;
+          --muted: #4a4a4a;
+          --accent: #c43d0c;
+          --rule: #d9d9d9;
+          --rule-strong: #999999;
+        }
+        .bar {
+          display: none;
+        }
+        .sheet {
+          max-width: none;
+          padding: 0;
+        }
+        a {
+          color: var(--ink);
+          text-decoration: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="bar" aria-label="Site">
+      <a href="./">lennix</a>
+      <div class="actions">
+        <button type="button" class="btn" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </nav>
+
+    <main class="sheet">
+      <header class="head">
+        <h1>Lucas Souza</h1>
+        <p class="subtitle">
+          Senior Fullstack &amp; AI Systems Engineer · TypeScript, Next.js, NestJS, React, PostgreSQL, C# · Brazil (Fluent English)
+        </p>
+        <ul class="contact-line">
+          <li><a href="mailto:swlucas05@gmail.com">swlucas05@gmail.com</a></li>
+          <li><a href="https://github.com/lennix1337">github.com/lennix1337</a></li>
+          <li><a href="https://www.linkedin.com/in/lucaszsouza/">linkedin.com/in/lucaszsouza</a></li>
+          <li><a href="./">lennix1337.github.io</a></li>
+        </ul>
+      </header>
+
+      <section class="sec">
+        <h2>Summary</h2>
+        <p>
+          Senior software engineer shipping high-scale TypeScript/NestJS/Next.js/React/SQL production systems and building autonomous AI coding infrastructure. Ported the 2,564-star C++23 tool ripwire to native Windows, authored the Genexus18MCP server (55,142 npm downloads in the last year), and built an always-on multi-agent engineering harness on Pi.
+        </p>
+      </section>
+
+      <section class="sec">
+        <h2>Experience</h2>
+        <div class="entry">
+          <div class="when">Jul 2026 – Now</div>
+          <div>
+            <h3>Sertrading <span>· Senior Software Developer</span></h3>
+            <p>
+              Building B2B products and high-scale internal systems for one of the largest trading companies in Brazil, on Next.js, NestJS, TypeScript, and SQL.
+            </p>
+          </div>
+        </div>
+        <div class="entry">
+          <div class="when">2025 – Now</div>
+          <div>
+            <h3>DentAI <span>· Main Developer</span></h3>
+            <p>
+              Architecture to production as the sole engineer for a platform serving 4,000+ users. Built generative media pipelines on Gemini and Veo 3, clinical RAG assistance, and a Next.js 15 migration that cut load times from 15s to under 4s.
+            </p>
+          </div>
+        </div>
+        <div class="entry">
+          <div class="when">2022 – Jul 2026</div>
+          <div>
+            <h3>UNIVALI <span>· Senior Software Engineer</span></h3>
+            <p>
+              Lead architect of the Universidade Gratuita program serving 20,000+ users. Automated document intake for 3,000+ candidates (saving 100+ hours of manual work) and built the scholarship review flow with legally binding e-signatures.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Open Source &amp; AI Systems</h2>
+        <div class="entry">
+          <div class="when">Pi Harness</div>
+          <div>
+            <h3>Autonomous Engineering Agent Harness <span>· 12 public repos</span></h3>
+            <p>
+              Built and operate an always-on agent system on Pi: extended <a href="https://github.com/lennix1337/pi-optchat">pi-optchat</a> (zoomable memory, Slack + local Whisper voice notes, PR review), <a href="https://github.com/lennix1337/pi-multi-account">pi-multi-account</a> (quota-aware failover), <a href="https://github.com/lennix1337/pi-subagents">pi-subagents</a>, and <a href="https://github.com/lennix1337/pi-goal-x">pi-goal-x</a>; authored <a href="https://github.com/lennix1337/pi-gitwatch">pi-gitwatch</a>, <a href="https://github.com/lennix1337/pi-vault">pi-vault</a>, <a href="https://github.com/lennix1337/pi-browser-harness">pi-browser-harness</a>, <a href="https://github.com/lennix1337/pi-agent-desktop">pi-agent-desktop</a>, <a href="https://github.com/lennix1337/pi-ripwire-but-better">pi-ripwire-but-better</a>, <a href="https://github.com/lennix1337/pi-lsp">pi-lsp</a>, <a href="https://github.com/lennix1337/pi-hashline">pi-hashline</a>, and <a href="https://github.com/lennix1337/pi-avatar">pi-avatar</a> (Rust 3D VRM pet).
+            </p>
+          </div>
+        </div>
+        <div class="entry">
+          <div class="when">C++23 · PR #44</div>
+          <div>
+            <h3>ripwire Native Windows Port <span>· 2,564 stars (redhat-et/ripwire)</span></h3>
+            <p>
+              Engineered native Windows x64 support (8,891 lines across 175 files, clang-cl + MSVC ABI, Job Objects, UTF-8 long paths, ACL cache), cutting NTFS warm retrieval by 30× and MCP calls by 1,750× vs WSL2. <a href="ripwire-windows-port.html">Case study</a>.
+            </p>
+          </div>
+        </div>
+        <div class="entry">
+          <div class="when">C# · npm</div>
+          <div>
+            <h3>Genexus18MCP <span>· 55,142 npm downloads/yr · 48 stars · 28 forks</span></h3>
+            <p>
+              MCP server enabling Claude, Cursor, and Codex to work inside GeneXus 16–18 knowledge bases via native SDK (plus legacy 8–15 compatibility). <a href="https://github.com/lennix1337/Genexus18MCP">Repository</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>Core Stack &amp; Education</h2>
+        <div class="skills-grid">
+          <div class="skill-box">
+            <h3>Fullstack &amp; Data</h3>
+            <p>TypeScript, JavaScript, Next.js, React, NestJS, Node.js, PostgreSQL, SQL, C#</p>
+          </div>
+          <div class="skill-box">
+            <h3>Infra &amp; AI Systems</h3>
+            <p>Docker, AWS, GitHub Actions, MCP, LSP, CDP/Browser Automation, Multi-Agent Orchestration</p>
+          </div>
+          <div class="skill-box">
+            <h3>Education &amp; Languages</h3>
+            <p>Canterbury Technical Institute (Brisbane, 2020) — Diploma of Software Development &amp; Advanced Diploma of IT. Fluent English, Native Portuguese.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

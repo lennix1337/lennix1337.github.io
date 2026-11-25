@@ -107,6 +107,24 @@
         color: inherit;
       }
 
+      .skip-link {
+        position: fixed;
+        top: -100px;
+        left: 16px;
+        z-index: 30;
+        padding: 10px 16px;
+        background: var(--accent);
+        color: var(--bg);
+        font: 600 0.8125rem/1 var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+      }
+
+      .skip-link:focus {
+        top: 12px;
+      }
+
       a:focus-visible,
       button:focus-visible {
         outline: 2px solid var(--accent);
@@ -139,8 +157,472 @@
         z-index: 2;
       }
 
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px var(--gutter);
+        background: rgba(9, 9, 11, 0.86);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .scroll-progress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 2px;
+        background: var(--accent);
+        transform-origin: left center;
+        transform: scaleX(0);
+        pointer-events: none;
+      }
+
+      .top-nav a[aria-current="location"] {
+        color: var(--ink);
+        box-shadow: inset 0 -2px 0 var(--accent);
+      }
+
+      .brand {
+        font: 400 1.25rem/1 var(--display);
+        letter-spacing: -0.04em;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .brand span {
+        color: var(--accent);
+      }
+
+      .top-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 20px;
+        font: 500 0.75rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .top-nav a {
+        color: var(--muted);
+        text-decoration: none;
+        padding: 6px 0;
+        transition: color 0.16s ease;
+      }
+
+      .top-nav a:hover,
+      .top-nav a:focus-visible {
+        color: var(--ink);
+      }
+
+      .top-nav a.nav-cv {
+        color: var(--accent);
+      }
+
+      .top-nav a.nav-cv:hover {
+        color: var(--ink);
+      }
+
       section {
         padding: 0 var(--gutter);
+        scroll-margin-top: 68px;
+      }
+
+      /* Harness system architecture */
+
+      .harness-intro {
+        max-width: 68ch;
+        margin: -18px 0 36px;
+        font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+        line-height: 1.55;
+        color: var(--ink);
+      }
+
+      .arch-shell {
+        background: rgba(12, 13, 16, 0.94);
+        border: 1px solid var(--rule-strong);
+      }
+
+      .arch-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px 20px;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--rule);
+        background: rgba(17, 18, 21, 0.96);
+        font: 500 0.75rem/1.3 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .arch-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink);
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        display: inline-block;
+        animation: blink 2.2s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.35; }
+      }
+
+      .arch-diagram-wrap {
+        padding: 20px 18px 14px;
+        border-bottom: 1px solid var(--rule);
+        overflow-x: auto;
+        background:
+          linear-gradient(to right, rgba(244, 243, 239, 0.024) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(244, 243, 239, 0.024) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+
+      .arch-svg {
+        display: block;
+        width: 100%;
+        min-width: 780px;
+        height: auto;
+      }
+
+      .arch-wire {
+        fill: none;
+        stroke: rgba(244, 243, 239, 0.2);
+        stroke-width: 1.5;
+      }
+
+      .arch-wire-accent {
+        fill: none;
+        stroke: rgba(255, 90, 31, 0.42);
+        stroke-width: 1.75;
+      }
+
+      .trace-pulse {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 2.25;
+        stroke-linecap: square;
+        stroke-dasharray: 14 220;
+        animation: flow 3.6s linear infinite;
+      }
+
+      .trace-pulse.slow {
+        animation-duration: 5.2s;
+        stroke-dasharray: 12 280;
+      }
+
+      .trace-pulse.reverse {
+        animation-direction: reverse;
+        animation-duration: 4.4s;
+      }
+
+      @keyframes flow {
+        from { stroke-dashoffset: 240; }
+        to { stroke-dashoffset: 0; }
+      }
+
+      .svg-node {
+        cursor: pointer;
+        transition: opacity 0.18s ease;
+      }
+
+      .svg-node rect {
+        fill: #111215;
+        stroke: rgba(244, 243, 239, 0.24);
+        stroke-width: 1.25;
+        transition: stroke 0.18s ease, fill 0.18s ease;
+      }
+
+      .svg-node.is-core rect {
+        fill: #18110e;
+        stroke: var(--accent);
+        stroke-width: 1.75;
+      }
+
+      .svg-node:hover rect,
+      .svg-node.is-active rect {
+        stroke: var(--accent);
+        fill: #1c1411;
+      }
+
+      .svg-zone-label {
+        fill: #9b9ea4;
+        font-family: "JetBrains Mono", Consolas, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+
+      .svg-title {
+        fill: #f4f3ef;
+        font-family: "JetBrains Mono", Consolas, monospace;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .svg-sub {
+        fill: #9b9ea4;
+        font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+        font-size: 12px;
+      }
+
+      .svg-tag {
+        fill: #ff5a1f;
+        font-family: "JetBrains Mono", Consolas, monospace;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+
+      .svg-tag.fork {
+        fill: #c7cad1;
+      }
+
+      .flow-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--rule);
+        background: rgba(12, 13, 16, 0.96);
+      }
+
+      .flow-label {
+        margin-right: 6px;
+        font: 500 0.72rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .flow-btn {
+        cursor: pointer;
+        padding: 7px 11px;
+        border: 1px solid var(--rule-strong);
+        background: var(--surface);
+        color: var(--ink);
+        font: 500 0.72rem/1 var(--mono);
+        letter-spacing: 0.04em;
+        transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+      }
+
+      .flow-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .flow-btn[aria-pressed="true"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg);
+        font-weight: 600;
+      }
+
+      .flow-readout {
+        padding: 11px 18px;
+        border-bottom: 1px solid var(--rule);
+        background: #0d0e11;
+        font: 400 0.8125rem/1.5 var(--mono);
+        color: var(--ink);
+        min-height: 44px;
+      }
+
+      .flow-readout strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .arch-svg.has-flow .svg-node {
+        opacity: 0.34;
+      }
+
+      .arch-svg.has-flow .svg-node.is-flow-hit {
+        opacity: 1;
+      }
+
+      .arch-svg.has-flow .svg-node.is-flow-hit rect {
+        stroke: var(--accent);
+        stroke-width: 2;
+        fill: #1f140f;
+      }
+
+      .copy-row {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .copy-row code {
+        margin-top: 0;
+      }
+
+      .copy-btn {
+        cursor: pointer;
+        padding: 6px 10px;
+        border: 1px solid var(--rule-strong);
+        background: rgba(9, 9, 11, 0.88);
+        color: var(--ink);
+        font: 500 0.72rem/1 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
+      }
+
+      .copy-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .copy-btn.copied {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg);
+      }
+
+      .arch-hint {
+        display: none;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font: 400 0.72rem/1.3 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .arch-subsystems {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .subsystem {
+        padding: 22px 20px;
+        border-bottom: 1px solid var(--rule);
+        border-right: 1px solid var(--rule);
+        transition: background-color 0.18s ease;
+      }
+
+      .subsystem:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .subsystem:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+
+      .subsystem.is-active {
+        background: rgba(255, 90, 31, 0.055);
+      }
+
+      .subsystem-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .subsystem-head h3 {
+        margin: 0;
+        font: 600 0.8125rem/1.2 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .subsystem-head span {
+        font: 400 0.75rem/1.2 var(--mono);
+        color: var(--muted);
+      }
+
+      .pkg-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .pkg-list a {
+        display: block;
+        padding: 12px 14px;
+        background: rgba(17, 18, 21, 0.9);
+        border: 1px solid var(--rule);
+        text-decoration: none;
+        transition: border-color 0.16s ease, background-color 0.16s ease;
+      }
+
+      .pkg-list a:hover,
+      .pkg-list a:focus-visible {
+        border-color: var(--accent);
+        background: rgba(255, 90, 31, 0.07);
+      }
+
+      .pkg-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 6px 10px;
+      }
+
+      .pkg-name {
+        font: 600 0.9rem/1.25 var(--mono);
+        color: var(--ink);
+      }
+
+      .pkg-list a:hover .pkg-name {
+        color: var(--accent);
+      }
+
+      .pkg-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font: 500 0.6875rem/1 var(--mono);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .pkg-lang {
+        color: var(--muted);
+      }
+
+      .pkg-badge {
+        color: var(--accent);
+      }
+
+      .pkg-badge.fork {
+        color: #c7cad1;
+      }
+
+      .pkg-desc {
+        margin: 6px 0 0;
+        font-size: 0.875rem;
+        line-height: 1.48;
+        color: var(--muted);
       }
 
       /* Hero */
@@ -151,57 +633,97 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        padding-top: clamp(32px, 6vh, 64px);
-        padding-bottom: clamp(40px, 8vh, 88px);
+        padding-top: clamp(76px, 11vh, 112px);
+        padding-bottom: clamp(32px, 6.5vh, 72px);
+      }
+
+      .hero-role {
+        margin: clamp(14px, 2vh, 22px) 0 0;
+        max-width: 54ch;
+        font: 600 clamp(0.8125rem, 1.1vw, 0.9rem) / 1.45 var(--mono);
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-shadow: 0 2px 16px rgba(9, 9, 11, 0.98);
       }
 
       .name {
         margin: 0;
-        font: 400 clamp(4.25rem, 19vw, 12.25rem) / 0.86 var(--display);
+        font: 400 clamp(4rem, 17vw, 11.25rem) / 0.86 var(--display);
         letter-spacing: -0.04em;
         color: var(--ink);
       }
 
       .name span {
         display: inline-block;
-        opacity: 0;
-        transform: translateY(0.1em);
-        filter: blur(6px);
-        animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        animation-delay: calc(0.85s + var(--i) * 50ms);
+        animation: rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        animation-delay: calc(var(--i) * 28ms);
       }
 
       @keyframes rise {
+        from {
+          transform: translateY(0.08em);
+        }
         to {
-          opacity: 1;
           transform: none;
-          filter: none;
         }
       }
 
       .lede {
-        max-width: 38ch;
-        margin: clamp(20px, 3.2vh, 36px) 0 0;
-        font-size: clamp(1.125rem, 1.8vw, 1.45rem);
-        line-height: 1.42;
+        max-width: 44ch;
+        margin: 12px 0 0;
+        font-size: clamp(1.0625rem, 1.65vw, 1.35rem);
+        line-height: 1.45;
         font-weight: 500;
         color: var(--ink);
         text-shadow: 0 2px 18px rgba(9, 9, 11, 0.95);
       }
 
       .motto {
-        margin: 14px 0 0;
+        margin: 10px 0 0;
         color: var(--muted);
-        font: 400 0.9375rem/1.5 var(--mono);
+        font: 400 0.875rem/1.5 var(--mono);
         letter-spacing: -0.01em;
+      }
+
+      .proof-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, auto));
+        justify-content: start;
+        gap: 12px 28px;
+        margin: clamp(20px, 3vh, 28px) 0 0;
+        padding: 14px 18px;
+        max-width: 720px;
+        background: rgba(12, 13, 16, 0.84);
+        border: 1px solid var(--rule-strong);
+        border-top: 1px solid var(--accent);
+        list-style: none;
+      }
+
+      .proof-strip li {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .proof-val {
+        font: 400 clamp(1.25rem, 2vw, 1.65rem) / 1 var(--display);
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .proof-label {
+        font: 400 0.72rem/1.3 var(--mono);
+        color: var(--muted);
       }
 
       .hero-links {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 10px 12px;
-        margin-top: 28px;
+        gap: 10px 10px;
+        margin-top: 22px;
       }
 
       .hero-links a {
@@ -286,7 +808,8 @@
         border-bottom: 1px solid var(--rule);
       }
 
-      .work a {
+      .work a,
+      .work-row {
         display: grid;
         grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) minmax(0, 2.4fr);
         gap: 14px 40px;
@@ -298,8 +821,27 @@
       }
 
       .work a:hover,
-      .work a:focus-visible {
+      .work a:focus-visible,
+      .work-row:hover {
         background: rgba(255, 90, 31, 0.045);
+      }
+
+      .work-row .work-title-link {
+        display: inline;
+        padding: 0;
+        margin: 0;
+        background: none;
+        text-decoration: none;
+      }
+
+      .work-row .work-title-link:hover,
+      .work-row .work-title-link:focus-visible {
+        background: none;
+        color: var(--accent);
+      }
+
+      .work-row:hover h3 {
+        color: var(--accent);
       }
 
       .work h3 {
@@ -428,12 +970,12 @@
       }
 
       .contact {
-        min-height: 100svh;
+        min-height: calc(100svh - 56px);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        padding-top: clamp(96px, 14vh, 160px);
-        padding-bottom: clamp(32px, 6vh, 64px);
+        padding-top: clamp(64px, 10vh, 112px);
+        padding-bottom: clamp(28px, 5vh, 52px);
       }
 
       .contact h2 {
@@ -462,8 +1004,75 @@
         font-variant-numeric: tabular-nums;
       }
 
+      .work .impact {
+        display: block;
+        margin-top: 10px;
+        font: 500 0.8125rem/1.45 var(--mono);
+        color: var(--accent);
+      }
+
+      .path .scale-pill {
+        display: block;
+        width: fit-content;
+        margin-top: 10px;
+        padding: 3px 9px;
+        background: var(--surface);
+        border: 1px solid var(--rule-strong);
+        font: 500 0.75rem/1.4 var(--mono);
+        color: var(--ink);
+      }
+
+      @media (max-width: 860px) {
+        .arch-subsystems {
+          grid-template-columns: 1fr;
+        }
+
+        .subsystem {
+          border-right: 0;
+          border-bottom: 1px solid var(--rule);
+        }
+
+        .subsystem:last-child {
+          border-bottom: 0;
+        }
+
+        .arch-hint {
+          display: block;
+        }
+      }
+
       @media (max-width: 800px) {
-        .work a {
+        .hero::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 70%;
+          z-index: -1;
+          pointer-events: none;
+          background: linear-gradient(
+            to top,
+            rgba(9, 9, 11, 0.94) 48%,
+            rgba(9, 9, 11, 0.68) 78%,
+            transparent 100%
+          );
+        }
+
+        .proof-strip {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px 16px;
+          padding: 12px 14px;
+        }
+
+        .flow-btn,
+        .copy-btn {
+          padding: 10px 12px;
+          min-height: 38px;
+        }
+
+        .work a,
+        .work-row {
           grid-template-columns: 1fr;
           padding-left: 0;
           padding-right: 0;
@@ -485,8 +1094,27 @@
         }
       }
 
+      @media (max-width: 560px) {
+        .site-header {
+          padding: 11px 14px;
+          gap: 8px;
+        }
+
+        .brand {
+          font-size: 1.05rem;
+        }
+
+        .top-nav {
+          gap: 4px 10px;
+          font-size: 0.66rem;
+          letter-spacing: 0.04em;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
-        .name span {
+        .name span,
+        .trace-pulse,
+        .status-dot {
           animation: none;
           opacity: 1;
           transform: none;
@@ -495,6 +1123,8 @@
       }
 
       /* ?capture renders the hero alone for the README banner and OG image. */
+      .capture .site-header,
+      .capture .proof-strip,
       .capture .hero-links,
       .capture .hint,
       .capture .block,
@@ -531,26 +1161,360 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#top">Skip to main content</a>
     <canvas id="scene" aria-hidden="true"></canvas>
 
-    <main>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="lennix home">lennix<span>.</span></a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="#harness">Harness</a>
+        <a href="#work">Work</a>
+        <a href="#path">Path</a>
+        <a href="cv.html" class="nav-cv">CV</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+    </header>
+
+    <main id="top">
       <section class="hero" aria-labelledby="name">
         <h1 class="name" id="name" aria-label="lennix">
           <span style="--i: 0">l</span><span style="--i: 1">e</span><span style="--i: 2">n</span><span style="--i: 3">n</span><span style="--i: 4">i</span><span style="--i: 5">x</span>
         </h1>
+        <p class="hero-role">Lucas Souza · Senior Fullstack &amp; AI Systems Engineer · Brazil · Fluent EN</p>
         <p class="lede">
-          Lucas Souza, senior engineer from Brazil. I ported a 2,300-star C++
-          tool to Windows with AI agents, and I build the tools those agents use
-          on real codebases.
+          TypeScript, Next.js, NestJS, React &amp; SQL in production — plus the open-source AI
+          tooling and always-on multi-agent harness that ships it.
         </p>
         <p class="motto">“just use AI bro like wtf”</p>
+        <ul class="proof-strip" aria-label="Verified engineering metrics">
+          <li>
+            <span class="proof-val" data-npm-year="genexus-mcp">55,142</span>
+            <span class="proof-label">npm downloads / yr · genexus-mcp</span>
+          </li>
+          <li>
+            <span class="proof-val" data-stars="redhat-et/ripwire">2,564</span>
+            <span class="proof-label">stars · ripwire Windows port</span>
+          </li>
+          <li>
+            <span class="proof-val">6,209</span>
+            <span class="proof-label">GitHub contributions / yr</span>
+          </li>
+          <li>
+            <span class="proof-val">12</span>
+            <span class="proof-label">public Pi harness repos</span>
+          </li>
+        </ul>
         <nav class="hero-links" aria-label="Links">
-          <a href="#work">See the work</a>
+          <a href="#harness">Explore the harness</a>
+          <a href="cv.html">CV</a>
           <a href="https://github.com/lennix1337">GitHub</a>
           <a href="https://www.linkedin.com/in/lucaszsouza/">LinkedIn</a>
           <a href="mailto:swlucas05@gmail.com">Email</a>
         </nav>
         <p class="hint" aria-hidden="true">Scroll to break the chains</p>
+      </section>
+
+      <section class="block" id="harness" aria-labelledby="harness-title">
+        <h2 id="harness-title">Always-on engineering harness</h2>
+        <p class="harness-intro">
+          Built on top of the Pi coding agent: a long-running autonomous teammate on a small VM
+          that keeps endless zoomable memory, takes text and voice orders from Slack on my phone,
+          wakes up when GitHub CI finishes, reviews and merges PRs, delegates to parallel workers
+          across quota-routed accounts, drives browsers and native desktop apps, and injects secrets
+          without the model ever seeing them.
+        </p>
+
+        <div class="arch-shell">
+          <div class="arch-bar">
+            <span class="arch-status"><span class="status-dot" aria-hidden="true"></span>Pi Agent Harness · Closed-Loop Runtime</span>
+            <span>12 public repos · trace a live runtime path below</span>
+          </div>
+
+          <div class="flow-bar" role="group" aria-label="Trace runtime flows">
+            <span class="flow-label">Trace flow:</span>
+            <button type="button" class="flow-btn" data-flow="phone" aria-pressed="false">01 · Phone → PR</button>
+            <button type="button" class="flow-btn" data-flow="ci" aria-pressed="false">02 · Red CI → Auto-fix</button>
+            <button type="button" class="flow-btn" data-flow="quota" aria-pressed="false">03 · Quota → Failover</button>
+            <button type="button" class="flow-btn" data-flow="vault" aria-pressed="false">04 · Secret Guard</button>
+          </div>
+
+          <div class="flow-readout" id="flow-readout" aria-live="polite">
+            <strong>[IDLE]</strong> Select a runtime flow above or click any architecture block to highlight its closed-loop path across the harness.
+          </div>
+
+          <div class="arch-diagram-wrap">
+            <svg
+              class="arch-svg"
+              id="arch-svg"
+              viewBox="0 0 1120 390"
+              role="group"
+              aria-label="System architecture diagram of the always-on Pi agent harness connecting Slack and GitWatch triggers to pi-optchat core, multi-account workers, code intelligence, browser and desktop execution, vault secret guardrails, and Rust avatar presence"
+            >
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#ff5a1f" />
+                </marker>
+                <marker id="arrow-dim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#9b9ea4" />
+                </marker>
+              </defs>
+
+              <!-- Zone headers -->
+              <text class="svg-zone-label" x="20" y="24">01 / TRIGGERS</text>
+              <text class="svg-zone-label" x="292" y="24">02 / ALWAYS-ON CORE</text>
+              <text class="svg-zone-label" x="602" y="24">03 / WORKER FLEET</text>
+              <text class="svg-zone-label" x="874" y="24">04 / EXECUTION &amp; GUARDRAILS</text>
+
+              <!-- Static architectural wires -->
+              <path class="arch-wire-accent" d="M 244 86 L 292 86" marker-end="url(#arrow)" />
+              <path class="arch-wire-accent" d="M 244 196 L 268 196 L 268 122 L 292 122" marker-end="url(#arrow)" />
+              <path class="arch-wire-accent" d="M 552 104 L 602 104" marker-end="url(#arrow)" />
+              <path class="arch-wire" d="M 422 184 L 422 224" marker-end="url(#arrow-dim)" />
+              <path class="arch-wire" d="M 716 146 L 716 184" marker-end="url(#arrow-dim)" />
+              <path class="arch-wire-accent" d="M 830 92 L 874 92" marker-end="url(#arrow)" />
+              <path class="arch-wire-accent" d="M 830 206 L 874 206" marker-end="url(#arrow)" />
+              <path class="arch-wire" d="M 552 272 L 578 272 L 578 314 L 874 314" marker-end="url(#arrow-dim)" />
+              <!-- Feedback return bus from CI / Execution back to GitWatch -->
+              <path class="arch-wire-accent" d="M 988 358 L 988 376 L 132 376 L 132 254" marker-end="url(#arrow)" />
+              <path class="arch-wire" d="M 552 152 L 578 152 L 578 314" />
+
+              <!-- Animated signal pulses -->
+              <path class="trace-pulse" d="M 244 86 L 292 86" />
+              <path class="trace-pulse slow" d="M 244 196 L 268 196 L 268 122 L 292 122" />
+              <path class="trace-pulse" d="M 552 104 L 602 104" />
+              <path class="trace-pulse" d="M 830 92 L 874 92" />
+              <path class="trace-pulse slow" d="M 830 206 L 874 206" />
+              <path class="trace-pulse slow" d="M 988 358 L 988 376 L 132 376 L 132 254" />
+
+              <!-- Zone 1: Triggers -->
+              <g class="svg-node" data-node="slack" data-zone="core" tabindex="0" role="button">
+                <rect x="20" y="42" width="224" height="88" rx="2" />
+                <text class="svg-title" x="34" y="68">Slack + Voice Notes</text>
+                <text class="svg-sub" x="34" y="89">Phone orders &amp; thread updates</text>
+                <text class="svg-sub" x="34" y="106">Local faster-whisper · $0 API</text>
+                <text class="svg-tag" x="34" y="122">INPUT CHANNEL</text>
+              </g>
+
+              <g class="svg-node" data-node="gitwatch" data-zone="core" tabindex="0" role="button">
+                <rect x="20" y="150" width="224" height="104" rx="2" />
+                <text class="svg-title" x="34" y="176">pi-gitwatch</text>
+                <text class="svg-sub" x="34" y="197">Watches PRs &amp; CI via GraphQL</text>
+                <text class="svg-sub" x="34" y="214">Wakes on red checks / conflicts</text>
+                <text class="svg-sub" x="34" y="231">Cleans merged worktrees</text>
+                <text class="svg-tag" x="34" y="246">AUTHORED · TS</text>
+              </g>
+
+              <!-- Zone 2: Core Brain -->
+              <g class="svg-node is-core" data-node="optchat" data-zone="core" tabindex="0" role="button">
+                <rect x="292" y="42" width="260" height="142" rx="2" />
+                <text class="svg-title" x="308" y="70">pi-optchat</text>
+                <text class="svg-sub" x="308" y="92">Always-on engineering brain on VM</text>
+                <text class="svg-sub" x="308" y="110">Endless zoomable memory (~174k msgs)</text>
+                <text class="svg-sub" x="308" y="128">PR ship-review · scheduled wakes</text>
+                <text class="svg-sub" x="308" y="146">Guarded deploys wait for human yes</text>
+                <text class="svg-tag fork" x="308" y="170">EXTENDED FORK · jonaslsaa · TS</text>
+              </g>
+
+              <g class="svg-node" data-node="goal" data-zone="fleet" tabindex="0" role="button">
+                <rect x="292" y="224" width="260" height="96" rx="2" />
+                <text class="svg-title" x="308" y="250">pi-goal-x</text>
+                <text class="svg-sub" x="308" y="271">/goal planning &amp; task persistence</text>
+                <text class="svg-sub" x="308" y="288">Optional completion auditor</text>
+                <text class="svg-tag fork" x="308" y="308">EXTENDED FORK · TS</text>
+              </g>
+
+              <!-- Zone 3: Worker Fleet & Quota -->
+              <g class="svg-node" data-node="multi" data-zone="fleet" tabindex="0" role="button">
+                <rect x="602" y="42" width="228" height="104" rx="2" />
+                <text class="svg-title" x="616" y="68">pi-multi-account</text>
+                <text class="svg-sub" x="616" y="89">Claude · Codex · Kimi · Cursor</text>
+                <text class="svg-sub" x="616" y="106">Quota failover &amp; overnight resume</text>
+                <text class="svg-tag fork" x="616" y="132">EXTENDED FORK · TS</text>
+              </g>
+
+              <g class="svg-node" data-node="subagents" data-zone="fleet" tabindex="0" role="button">
+                <rect x="602" y="184" width="228" height="104" rx="2" />
+                <text class="svg-title" x="616" y="210">pi-subagents</text>
+                <text class="svg-sub" x="616" y="231">Async parallel worker delegation</text>
+                <text class="svg-sub" x="616" y="248">Isolated worktrees &amp; safe reload</text>
+                <text class="svg-tag fork" x="616" y="274">EXTENDED FORK · TS</text>
+              </g>
+
+              <!-- Zone 4: Tools, Execution, Security & Presence -->
+              <g class="svg-node" data-node="code" data-zone="code" tabindex="0" role="button">
+                <rect x="874" y="42" width="226" height="96" rx="2" />
+                <text class="svg-title" x="888" y="68">Code Intel &amp; Edits</text>
+                <text class="svg-sub" x="888" y="89">pi-ripwire-but-better · pi-lsp</text>
+                <text class="svg-sub" x="888" y="106">pi-hashline (LINE:HASH edits)</text>
+                <text class="svg-tag" x="888" y="126">3 AUTHORED TOOLS</text>
+              </g>
+
+              <g class="svg-node" data-node="hands" data-zone="hands" tabindex="0" role="button">
+                <rect x="874" y="156" width="226" height="96" rx="2" />
+                <text class="svg-title" x="888" y="182">Browser &amp; Desktop</text>
+                <text class="svg-sub" x="888" y="203">pi-browser-harness (owned tabs)</text>
+                <text class="svg-sub" x="888" y="220">pi-agent-desktop (a11y tree)</text>
+                <text class="svg-tag" x="888" y="240">2 AUTHORED TOOLS</text>
+              </g>
+
+              <g class="svg-node" data-node="vault" data-zone="hands" tabindex="0" role="button">
+                <rect x="874" y="270" width="226" height="88" rx="2" />
+                <text class="svg-title" x="888" y="295">pi-vault + pi-avatar</text>
+                <text class="svg-sub" x="888" y="315">Zero-exposure secrets · redaction</text>
+                <text class="svg-sub" x="888" y="331">Rust VRM desktop state pet</text>
+                <text class="svg-tag" x="888" y="348">GUARDRAIL &amp; PRESENCE</text>
+              </g>
+            </svg>
+            <p class="arch-hint">Swipe horizontally to inspect full topology →</p>
+          </div>
+
+          <div class="arch-subsystems">
+            <div class="subsystem" data-subsystem="core">
+              <div class="subsystem-head">
+                <h3>Core, Memory &amp; Wakes</h3>
+                <span>Always-on control plane</span>
+              </div>
+              <ul class="pkg-list">
+                <li>
+                  <a href="https://github.com/lennix1337/pi-optchat" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-optchat</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge fork">Extended fork</span></span>
+                    </div>
+                    <p class="pkg-desc">Heavily extended fork of jonaslsaa/pi-optchat: one endless zoomable conversation (~174k messages), Slack + local faster-whisper voice notes, PR ship-review, scheduled wakes and guarded deploys.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-gitwatch" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-gitwatch</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Watches GitHub PRs and branch CI via GraphQL; auto-follows pushes and PR creation, wakes the agent on failures, conflicts or merges, and removes merged worktrees automatically.</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="subsystem" data-subsystem="fleet">
+              <div class="subsystem-head">
+                <h3>Orchestration &amp; Quota Mesh</h3>
+                <span>Multi-account resilience</span>
+              </div>
+              <ul class="pkg-list">
+                <li>
+                  <a href="https://github.com/lennix1337/pi-multi-account" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-multi-account</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge fork">Extended fork</span></span>
+                    </div>
+                    <p class="pkg-desc">Extended fork with quota-aware failover across Claude, Codex, Kimi, Cursor, Qwen and Ollama, preserving model quality band, reasoning level and overnight session recovery.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-subagents" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-subagents</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge fork">Extended fork</span></span>
+                    </div>
+                    <p class="pkg-desc">Extended fork for async child-agent delegation (reviews, parallel implementation, saved workflows, background jobs) with safe self-reload handshake for OptChat.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-goal-x" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-goal-x</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge fork">Extended fork</span></span>
+                    </div>
+                    <p class="pkg-desc">Extended fork adding /goal conversational planning, persistent cross-session task tracking and an optional independent completion auditor.</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="subsystem" data-subsystem="code">
+              <div class="subsystem-head">
+                <h3>Code Intelligence &amp; Precision Edits</h3>
+                <span>Compiler-backed tools</span>
+              </div>
+              <ul class="pkg-list">
+                <li>
+                  <a href="https://github.com/lennix1337/pi-ripwire-but-better" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-ripwire-but-better</span>
+                      <span class="pkg-meta"><span class="pkg-lang">JS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Structural code navigation in Pi via Ripwire: traces flows, callers and blast radius, runs explicit project checks and keeps bounded inspectable evidence.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-lsp" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-lsp</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Compiler-backed references, definitions, hover, diagnostics and scope-aware atomic rename for TypeScript/JS (native TS 7 &amp; tsserver) and C# (csharp-ls).</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-hashline" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-hashline</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Line-anchored read/edit tagging lines with LINE:HASH so edits name immutable anchors, reject stale writes atomically and cut output tokens.</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="subsystem" data-subsystem="hands">
+              <div class="subsystem-head">
+                <h3>Execution, Vault &amp; Presence</h3>
+                <span>Eyes, hands &amp; guardrails</span>
+              </div>
+              <ul class="pkg-list">
+                <li>
+                  <a href="https://github.com/lennix1337/pi-vault" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-vault</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Injects Windows DPAPI / Credential Manager secrets into one shell command without the model seeing values, blocking leaks in tool calls and redacting token shapes on output.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-browser-harness" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-browser-harness</span>
+                      <span class="pkg-meta"><span class="pkg-lang">Python</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Native browser control on browser-use/browser-harness with isolated owned tabs, focus emulation, stateful Python cells and compact accessibility snapshots.</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-agent-desktop" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-agent-desktop</span>
+                      <span class="pkg-meta"><span class="pkg-lang">TS</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Cross-platform computer use for native Windows, macOS and Linux apps via the OS accessibility tree (~0.2s native snapshots and multi-step JS cells).</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/lennix1337/pi-avatar" data-pulse>
+                    <div class="pkg-top">
+                      <span class="pkg-name">pi-avatar</span>
+                      <span class="pkg-meta"><span class="pkg-lang">Rust</span><span class="pkg-badge">Authored</span></span>
+                    </div>
+                    <p class="pkg-desc">Native Rust 3D VRM desktop pet (Rune framework, GPU skinning, zero Electron/WebView, ~60 FPS) walking the Windows taskbar and reacting to CI, merges and active workers.</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="block" id="work" aria-labelledby="work-title">
@@ -562,8 +1526,9 @@
               <p>
                 The ripgrep of AI context: a zero-dependency C++23 CLI and MCP
                 server that hands coding agents a map of the repo before they
-                read it. I wrote its native Windows port, 8,900 lines across 175
-                files on Clang and the MSVC ABI, built end to end with AI agents.
+                read it. I wrote its native Windows port, 8,891 lines across 175
+                files on Clang and the MSVC ABI.
+                <span class="impact">30× faster warm retrieval · 1,750× faster MCP calls on NTFS vs WSL2</span>
               </p>
               <dl class="meta">
                 <dt>Role</dt>
@@ -571,34 +1536,40 @@
                 <dt>Language</dt>
                 <dd>C++23</dd>
                 <dt>Stars</dt>
-                <dd><span data-stars="redhat-et/ripwire">2,363</span> stars</dd>
+                <dd><span data-stars="redhat-et/ripwire">2,564</span> stars</dd>
                 <dt>Write-up</dt>
                 <dd>Read the case study</dd>
               </dl>
             </a>
           </li>
           <li>
-            <a href="https://github.com/lennix1337/Genexus18MCP" data-pulse>
-              <h3>Genexus18MCP</h3>
-              <p>
-                MCP server that lets Claude, Cursor and Codex work inside GeneXus
-                knowledge bases. Native SDK on GeneXus 16 to 18, legacy support
-                back to 8. Installed from npm more than 36,000 times.
-                <code>npx genexus-mcp@latest init</code>
-              </p>
+            <div class="work-row" data-pulse>
+              <h3><a class="work-title-link" href="https://github.com/lennix1337/Genexus18MCP">Genexus18MCP</a></h3>
+              <div>
+                <p>
+                  MCP server that lets Claude, Cursor and Codex work inside GeneXus
+                  knowledge bases. Native SDK on GeneXus 16 to 18, legacy support
+                  back to 8.
+                  <span class="impact"><span data-npm-year="genexus-mcp">55,142</span> npm downloads in the last year</span>
+                </p>
+                <div class="copy-row">
+                  <code>npx genexus-mcp@latest init</code>
+                  <button type="button" class="copy-btn" data-copy="npx genexus-mcp@latest init" aria-label="Copy npx install command">Copy</button>
+                </div>
+              </div>
               <dl class="meta">
                 <dt>Role</dt>
                 <dd class="role">Author</dd>
                 <dt>Language</dt>
                 <dd>C#</dd>
                 <dt>Stars</dt>
-                <dd><span data-stars="lennix1337/Genexus18MCP">35</span> stars</dd>
+                <dd><span data-stars="lennix1337/Genexus18MCP">48</span> stars</dd>
                 <dt>Forks</dt>
-                <dd><span data-forks="lennix1337/Genexus18MCP">26</span> forks</dd>
+                <dd><span data-forks="lennix1337/Genexus18MCP">28</span> forks</dd>
                 <dt>Downloads</dt>
-                <dd><span data-npm-month="genexus-mcp">9,154</span> npm downloads last month</dd>
+                <dd><span data-npm-month="genexus-mcp">8,394</span> npm downloads last month</dd>
               </dl>
-            </a>
+            </div>
           </li>
           <li>
             <a href="https://github.com/lennix1337/bend2craft" data-pulse>
@@ -616,23 +1587,6 @@
               </dl>
             </a>
           </li>
-          <li>
-            <a href="https://github.com/lennix1337/locoChat" data-pulse>
-              <h3>locoChat</h3>
-              <p>
-                Security research on the live chat of Loco, a streaming
-                platform. Its API took the sender’s display name from the client
-                instead of the session, so any signed-in account could post as
-                anyone, moderators included. locoChat is the proof of concept.
-              </p>
-              <dl class="meta">
-                <dt>Role</dt>
-                <dd class="role">Security research</dd>
-                <dt>Language</dt>
-                <dd>JavaScript, Electron</dd>
-              </dl>
-            </a>
-          </li>
         </ul>
       </section>
 
@@ -644,7 +1598,9 @@
             <h3>Sertrading <span>Senior software developer</span></h3>
             <p>
               B2B products and high-scale internal systems for one of the
-              largest trading companies in Brazil, on Next.js and NestJS.
+              largest trading companies in Brazil, on Next.js, NestJS,
+              TypeScript and SQL.
+              <span class="scale-pill">Next.js · NestJS · TypeScript · SQL</span>
             </p>
           </li>
           <li>
@@ -655,6 +1611,7 @@
               past 4,000 users. Generative media on Gemini and Veo 3, RAG for
               clinical assistance, and a Next.js 15 migration that took load
               times from 15 seconds to under 4.
+              <span class="scale-pill">4,000+ users · 15s → &lt;4s · Sole engineer</span>
             </p>
           </li>
           <li>
@@ -665,6 +1622,7 @@
               20,000+ users. Automated document intake for 3,000+ candidates,
               saving 100+ hours of manual work, and built the scholarship
               review flow with legally binding e-signatures.
+              <span class="scale-pill">20,000+ users · 100+ hrs saved</span>
             </p>
           </li>
           <li>
@@ -682,20 +1640,22 @@
         </p>
         <p class="stack">
           Usually in TypeScript, Next.js, NestJS, React, Node.js, C#,
-          PostgreSQL, Docker, AWS and GitHub Actions, with Claude, Codex and
-          Gemini doing the typing.
+          PostgreSQL, SQL, Docker, AWS and GitHub Actions, with Claude, Codex
+          and Gemini doing the typing.
         </p>
       </section>
 
       <section class="contact" id="contact" aria-labelledby="contact-title">
         <h2 id="contact-title">Summon me</h2>
-        <p>Systems, AI tooling, or something that shouldn’t be possible. My inbox is open.</p>
+        <p>Senior fullstack systems, AI tooling, or something that shouldn’t be possible. My inbox is open.</p>
         <nav class="hero-links" aria-label="Contact">
           <a href="mailto:swlucas05@gmail.com">swlucas05@gmail.com</a>
+          <button type="button" class="copy-btn" data-copy="swlucas05@gmail.com" style="padding: 11px 16px;" aria-label="Copy email address">Copy email</button>
+          <a href="cv.html">CV</a>
           <a href="https://www.linkedin.com/in/lucaszsouza/">LinkedIn</a>
           <a href="https://github.com/lennix1337">GitHub</a>
         </nav>
-        <footer>3,004 contributions in the last year. On GitHub since 2017.</footer>
+        <footer>6,209 GitHub contributions in the last year. On GitHub since 2017.</footer>
       </section>
     </main>
 
@@ -748,7 +1708,7 @@
         document.documentElement.classList.add("no-webgl");
         throw error;
       }
-      renderer.setPixelRatio(Math.min(devicePixelRatio, capture ? 1 : 1.75));
+      renderer.setPixelRatio(Math.min(devicePixelRatio, capture ? 1 : 1.5));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 0.92;
 
@@ -1171,6 +2131,142 @@
         el.addEventListener("focus", () => (pulse = Math.max(pulse, 0.6)));
       });
 
+      // Cross-highlight SVG schematic nodes, live runtime flow traces, scroll progress & copy actions.
+      const archSvg = document.getElementById("arch-svg");
+      const flowReadout = document.getElementById("flow-readout");
+      const flowBtns = [...document.querySelectorAll(".flow-btn")];
+      const svgNodes = [...document.querySelectorAll(".svg-node")];
+      const subsystems = [...document.querySelectorAll(".subsystem")];
+
+      const FLOWS = {
+        phone: {
+          nodes: ["slack", "optchat", "goal", "subagents", "code", "hands"],
+          zone: "core",
+          label: "[01 · PHONE → PR]",
+          text: "Voice note on Slack (local faster-whisper) → pi-optchat plans with zoomable memory + pi-goal-x → pi-subagents run parallel worktrees with ripwire/lsp/hashline + browser verification → PR ship-review.",
+        },
+        ci: {
+          nodes: ["gitwatch", "optchat", "subagents", "code", "vault"],
+          zone: "core",
+          label: "[02 · RED CI → AUTO-FIX]",
+          text: "pi-gitwatch catches a failing GitHub Actions run via GraphQL → wakes pi-optchat with --log-failed → worker reproduces & patches → green merge cleans worktree & updates pi-avatar mood.",
+        },
+        quota: {
+          nodes: ["optchat", "multi", "subagents"],
+          zone: "fleet",
+          label: "[03 · QUOTA → FAILOVER]",
+          text: "pi-multi-account catches 429/quota exhaustion → cools slot, rotates to next Claude/Codex/Kimi/Cursor account preserving quality band & reasoning level → auto-resumes interrupted turn.",
+        },
+        vault: {
+          nodes: ["optchat", "subagents", "vault"],
+          zone: "hands",
+          label: "[04 · SECRET GUARD]",
+          text: "pi-vault injects Windows DPAPI / Credential Manager secret into one command → tool_call blocks leaks → tool_result redacts stored values & token shapes before output reaches the model.",
+        },
+      };
+
+      let activeFlow = null;
+      function applyFlow(key) {
+        activeFlow = activeFlow === key ? null : key;
+        flowBtns.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.flow === activeFlow)));
+        if (!activeFlow) {
+          archSvg.classList.remove("has-flow");
+          svgNodes.forEach((n) => n.classList.remove("is-flow-hit"));
+          flowReadout.innerHTML =
+            "<strong>[IDLE]</strong> Select a runtime flow above or click any architecture block to highlight its closed-loop path across the harness.";
+          return;
+        }
+        const f = FLOWS[activeFlow];
+        archSvg.classList.add("has-flow");
+        svgNodes.forEach((n) => n.classList.toggle("is-flow-hit", f.nodes.includes(n.dataset.node)));
+        setActiveZone(f.zone);
+        flowReadout.innerHTML = `<strong>${f.label}</strong> ${f.text}`;
+        pulse = Math.max(pulse, 0.85);
+      }
+
+      flowBtns.forEach((btn) => btn.addEventListener("click", () => applyFlow(btn.dataset.flow)));
+
+      function setActiveZone(zone) {
+        svgNodes.forEach((n) => n.classList.toggle("is-active", n.dataset.zone === zone));
+        subsystems.forEach((s) => s.classList.toggle("is-active", s.dataset.subsystem === zone));
+      }
+      svgNodes.forEach((node) => {
+        const activate = () => {
+          setActiveZone(node.dataset.zone);
+          pulse = Math.max(pulse, 0.55);
+        };
+        node.addEventListener("pointerenter", activate);
+        node.addEventListener("focus", activate);
+        node.addEventListener("click", () => {
+          activate();
+          const panel = document.querySelector(`.subsystem[data-subsystem="${node.dataset.zone}"]`);
+          if (panel) panel.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+        });
+        node.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            node.dispatchEvent(new Event("click"));
+          }
+        });
+      });
+      subsystems.forEach((sub) => {
+        sub.addEventListener("pointerenter", () => setActiveZone(sub.dataset.subsystem));
+      });
+
+      // Scroll progress hairline & active section indicator
+      const progressBar = document.getElementById("scroll-progress");
+      const navLinks = [...document.querySelectorAll('.top-nav a[href^="#"]')];
+      function updateScrollProgress() {
+        const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, scrollY / max))})`;
+      }
+      addEventListener("scroll", updateScrollProgress, { passive: true });
+      updateScrollProgress();
+
+      const observedSections = navLinks
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const id = `#${entry.target.id}`;
+              navLinks.forEach((a) => {
+                if (a.getAttribute("href") === id) a.setAttribute("aria-current", "location");
+                else a.removeAttribute("aria-current");
+              });
+            }
+          },
+          { rootMargin: "-35% 0px -55% 0px" },
+        );
+        observedSections.forEach((s) => io.observe(s));
+      }
+
+      // Copy-to-clipboard microinteractions
+      document.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const val = btn.dataset.copy;
+          const orig = btn.textContent;
+          const finish = () => {
+            btn.classList.add("copied");
+            btn.textContent = "Copied";
+            pulse = Math.max(pulse, 0.7);
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.textContent = orig;
+            }, 1600);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(val).then(finish).catch(finish);
+          } else {
+            finish();
+          }
+        });
+      });
+
       function scrollState() {
         const vh = innerHeight;
         const broken = smooth(THREE.MathUtils.clamp(scrollY / (vh * 0.85), 0, 1));
@@ -1224,13 +2320,21 @@
         addEventListener("resize", still);
         addEventListener("pointermove", still);
       } else {
+        let rafId = 0;
         const loop = () => {
+          if (document.hidden) {
+            rafId = 0;
+            return;
+          }
           const now = (performance.now() - introStart) / 1000;
-          const intro = 1 - smooth(THREE.MathUtils.clamp(now / 2.2, 0, 1));
+          const intro = 1 - smooth(THREE.MathUtils.clamp(now / 1.8, 0, 1));
           frame(now, { intro });
-          requestAnimationFrame(loop);
+          rafId = requestAnimationFrame(loop);
         };
-        loop();
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden && !rafId) rafId = requestAnimationFrame(loop);
+        });
+        rafId = requestAnimationFrame(loop);
       }
 
       // Refresh star and fork counts; the numbers baked into the HTML stay if this fails.
@@ -1246,6 +2350,12 @@
         }
         document.querySelectorAll("[data-npm-month]").forEach((el) => {
           fetch(`https://api.npmjs.org/downloads/point/last-month/${el.dataset.npmMonth}`)
+            .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+            .then((data) => (el.textContent = data.downloads.toLocaleString("en-US")))
+            .catch(() => {});
+        });
+        document.querySelectorAll("[data-npm-year]").forEach((el) => {
+          fetch(`https://api.npmjs.org/downloads/point/last-year/${el.dataset.npmYear}`)
             .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
             .then((data) => (el.textContent = data.downloads.toLocaleString("en-US")))
             .catch(() => {});
